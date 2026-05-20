@@ -1,0 +1,12 @@
+<%# app/views/teams/new.html.erb %>
+<div class='flex flex-col justify-center justify-self-center w-full max-w-xl'>
+  <h1 class="text-3xl pb-3">New Team</h1>
+
+  <div class="flex flex-col py-3">
+    <%= render "form", team: @team %>
+
+    <button class="px-4 py-2 my-2 self-center border-2 rounded-4xl">
+      <%= link_to "Cancel", teams_path %>
+    </button>
+  </div>
+</div>

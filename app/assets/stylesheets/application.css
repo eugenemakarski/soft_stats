@@ -1,0 +1,4 @@
+/* Non-Tailwind application styles.
+ * Tailwind CSS is compiled from app/assets/tailwind/application.css
+ * into app/assets/builds/tailwind.css — served via stylesheet_link_tag "tailwind".
+ */

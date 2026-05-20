@@ -1,0 +1,48 @@
+<div
+  class="
+    relative overflow-x-auto bg-neutral-primary shadow-xs rounded-xl border
+    border-default
+  "
+>
+  <table class="w-full text-sm text-left text-body">
+    <thead class="text-sm text-body border-b border-default">
+      <tr>
+        <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          Name
+        </th>
+        <th scope="col" class="px-6 py-3 font-medium">
+          Number
+        </th>
+        <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          Status
+        </th>
+        <th scope="col" class="px-6 py-3 font-medium">
+          Batting Order
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @rosters.each do |roster| %>
+        <tr class="border-b border-default">
+          <th
+            scope="row"
+            class="
+              px-6 py-4 font-medium text-heading whitespace-nowrap bg-neutral-secondary-soft
+            "
+          >
+            <%= roster.player.name %>
+          </th>
+          <td class="px-6 py-4">
+            <%= roster.player.name %>
+          </td>
+          <td class="px-6 py-4 bg-neutral-secondary-soft">
+            <%= roster.player.name %>
+          </td>
+          <td class="px-6 py-4">
+            <%= roster.player.name %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

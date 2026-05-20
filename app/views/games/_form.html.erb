@@ -1,0 +1,24 @@
+<%# app/views/games/_form.html.erb %>
+<%= form_with model: [@season, game] do |form| %>
+  <% if form.object.errors.any? %>
+    <p class="error">
+      <%= form.object.errors.full_messages.first %>
+    </p>
+  <% end %>
+
+  <div class="flex flex-col gap-2">
+    <%= render "shared/date_time_picker",
+    form: form,
+    field: :date,
+    error: nil,
+    disabled: false %>
+    <%= render "shared/text_input",
+    form: form,
+    field: :opponent,
+    error: nil,
+    disabled: false %>
+
+    <%= form.submit class:
+                  "px-4 py-2 my-2 self-center border-2 rounded-4xl cursor-pointer hover:bg-white hover:text-black transition-colors" %>
+  </div>
+<% end %>

@@ -1,0 +1,42 @@
+<%# app/views/game_rosters/index.html.erb %>
+<div class="flex flex-col gap-3 p-5 items-center">
+  <h1 class="font-bold text-4xl">Game Roster</h1>
+  <%= form_with url: game_game_rosters_path(@game), method: :post do |form| %>
+  <% if flash.alert %>
+    <p class="error">
+    <%= flash.alert %>
+    </p>
+  <% end %> 
+    <div
+      class="
+        w-96 bg-neutral-primary-soft border border-default rounded-xl shadow-xs p-4
+      "
+    >
+      <div class="grid grid-cols-3 font-semibold text-sm mb-2 px-2">
+        <span>Player</span>
+        <span class="text-center">Batting #</span>
+        <span class="text-center">Available</span>
+      </div>
+      <% @player_options.each do |player| %>
+        <div class="grid grid-cols-3 items-center py-2 border-t border-default">
+          <span class="text-sm"><%= player.name %></span>
+          <%= form.number_field "roster[#{player.id}][batting_order]",
+                            placeholder: "#",
+                            class:
+                              "w-14 text-center border border-default rounded px-1 py-1 text-sm mx-auto" %>
+          <%= form.check_box "roster[#{player.id}][available]", { class: "mx-auto", checked: true }, "1", "0" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="flex flex-col w-full gap-3 items-center" >
+    <%= form.submit "Save Roster",
+                class:
+                  "mt-4 border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white cursor-pointer" %>
+  <% end %>
+
+  <%= link_to "Back",
+  game_path(@game),
+  class:
+  "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+    </div>
+</div>

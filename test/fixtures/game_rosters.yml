@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game: one
+  player: one
+  batting_order: 1
+  available: false
+
+two:
+  game: two
+  player: two
+  batting_order: 1
+  available: false

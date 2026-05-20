@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-3 p-5">
+  <h1 class="font-bold text-4xl">Seasons</h1>
+  <% @seasons.each do |season| %>
+    <div>
+      <%= link_to season.season, season_path(season.id) %>
+    </div>
+  <% end %>
+
+  <button
+    class='
+      border-2 border-blue-400 px-4 py-2 rounded text-blue-500 hover:bg-blue-400
+      hover:text-white
+    '
+  >
+    <%= link_to "New Season", new_team_season_path(@team) %>
+  </button>
+</div>

@@ -1,0 +1,17 @@
+<%= form_with model: [@team, season] do |form| %>
+  <% if form.object.errors.any? %>
+    <p class="text-red-500">
+      <%= form.object.errors.full_messages.first %>
+    </p>
+  <% end %>
+  <div class="flex flex-col gap-2">
+    <%= render "shared/text_input",
+    form: form,
+    field: :season,
+    error: nil,
+    disabled: false %>
+    <button class="px-4 py-2 my-2 self-center border-2 rounded-4xl">
+      <%= form.submit %>
+    </button>
+  </div>
+<% end %>

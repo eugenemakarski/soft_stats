@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@source "../../../node_modules/flowbite";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.font-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading font-bold uppercase tracking-wide;
+}
+
+@theme {
+  /* main text color */
+  --color-body: var(--color-stone-600);
+  --color-body-subtle: var(--color-stone-500);
+
+  /* text heading colors */
+  --color-heading: var(--color-stone-900);
+
+  /* used for custom brand colors */
+  --color-fg-brand-subtle: var(--color-stone-200);
+  --color-fg-brand: var(--color-stone-950);
+  --color-fg-brand-strong: var(--color-stone-900);
+
+  --font-sans: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
+  --font-body: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
+  --font-display: 'Barlow Condensed', 'ui-sans-serif', sans-serif;
+  --font-heading: 'Barlow Condensed', 'ui-sans-serif', sans-serif;
+  --font-mono: 'ui-monospace', 'SFMono-Regular', 'Menlo', monospace;
+
+  --radius-base: 0.5rem;
+}
+
+/* Dark mode overrides for custom stone-based colors */
+.dark {
+  --color-body: var(--color-stone-400);
+  --color-body-subtle: var(--color-stone-500);
+  --color-heading: var(--color-stone-100);
+  --color-fg-brand-subtle: var(--color-stone-700);
+  --color-fg-brand: var(--color-stone-200);
+  --color-fg-brand-strong: var(--color-stone-300);
+}

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  season: 2025 
+  date: 2026-05-13 22:08:01
+  opponent: MyString
+
+two:
+  season: 2026 
+  date: 2026-05-13 22:08:01
+  opponent: MyString
