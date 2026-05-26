@@ -9,17 +9,19 @@
     <%= render "in_progress", game: @game, rosters: @rosters %>
   <% end %>
 
-  <%= link_to "Update Game Roster",
-  game_game_rosters_path(@game),
-  class:
-    "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   <%= link_to "Back",
   season_path(@game.season_id),
   class:
     "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-  <%= button_to "START GAME",
-  start_game_path(@game),
-  class:
-    "border-2 border-blue-400 mt-4 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-
+  <% if @game.not_started? %>
+    <%= link_to "Update Game Roster",
+    game_game_rosters_path(@game),
+    class:
+      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+    <%= button_to "START GAME",
+    start_game_path(@game),
+    method: :patch,
+    class:
+      "border-2 border-blue-400 mt-4 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+  <% end %>
 </div>

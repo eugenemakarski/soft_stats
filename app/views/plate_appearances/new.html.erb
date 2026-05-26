@@ -1,0 +1,11 @@
+<%# app/views/plate_appearances/new.html.erb %>
+<div class='flex flex-col justify-center justify-self-center w-full max-w-xl'>
+  <h1 class="text-3xl pb-3">Record AB</h1>
+  <div class="flex flex-col py-3">
+    <%= render "form", plate_appearance: @plate_appearance, on_base_players: @on_base_players %>
+
+    <button class="btn-outline self-center">
+      <%= link_to "Cancel", game_path(@game) %>
+    </button>
+  </div>
+</div>

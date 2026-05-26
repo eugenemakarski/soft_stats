@@ -15,16 +15,16 @@ h1, h2, h3, h4, h5, h6 {
 
 @theme {
   /* main text color */
-  --color-body: var(--color-stone-600);
-  --color-body-subtle: var(--color-stone-500);
+  --color-body: var(--color-blue-600);
+  --color-body-subtle: var(--color-blue-500);
 
   /* text heading colors */
-  --color-heading: var(--color-stone-900);
+  --color-heading: var(--color-blue-900);
 
   /* used for custom brand colors */
-  --color-fg-brand-subtle: var(--color-stone-200);
-  --color-fg-brand: var(--color-stone-950);
-  --color-fg-brand-strong: var(--color-stone-900);
+  --color-fg-brand-subtle: var(--color-blue-200);
+  --color-fg-brand: var(--color-blue-950);
+  --color-fg-brand-strong: var(--color-blue-900);
 
   --font-sans: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
   --font-body: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
@@ -35,12 +35,65 @@ h1, h2, h3, h4, h5, h6 {
   --radius-base: 0.5rem;
 }
 
-/* Dark mode overrides for custom stone-based colors */
+/* Dark mode overrides for custom blue-based colors */
 .dark {
-  --color-body: var(--color-stone-400);
-  --color-body-subtle: var(--color-stone-500);
-  --color-heading: var(--color-stone-100);
-  --color-fg-brand-subtle: var(--color-stone-700);
-  --color-fg-brand: var(--color-stone-200);
-  --color-fg-brand-strong: var(--color-stone-300);
+  --color-body: var(--color-blue-400);
+  --color-body-subtle: var(--color-blue-500);
+  --color-heading: var(--color-blue-100);
+  --color-fg-brand-subtle: var(--color-blue-700);
+  --color-fg-brand: var(--color-blue-200);
+  --color-fg-brand-strong: var(--color-blue-300);
+}
+
+/* ── Component classes ──────────────────────────────────────── */
+
+.btn {
+  @apply px-4 py-2 border-2 rounded-4xl font-medium text-sm cursor-pointer;
+}
+.btn-primary {
+  @apply px-4 py-2 border-2 rounded-4xl font-medium text-sm cursor-pointer bg-brand text-white border-transparent hover:bg-brand-strong;
+}
+.btn-outline {
+  @apply px-4 py-2 border-2 rounded-4xl font-medium text-sm cursor-pointer bg-transparent hover:bg-neutral-secondary-medium;
+}
+
+.form-input {
+  @apply bg-neutral-secondary-medium border border-default-medium text-heading text-sm
+         rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body;
+}
+
+.form-label {
+  @apply block mb-2 text-lg font-semibold text-heading;
+}
+
+.form-field {
+  @apply max-w-lg py-1;
+}
+
+.card {
+  @apply bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6;
+}
+
+.data-table {
+  @apply w-full text-sm text-left text-body;
+}
+
+.data-table thead {
+  @apply text-xs text-body bg-neutral-secondary-medium border-b border-default;
+}
+
+.data-table th {
+  @apply px-3 py-3 font-medium;
+}
+
+.data-table td {
+  @apply px-3 py-3;
+}
+
+.data-table tbody tr {
+  @apply border-b border-default bg-neutral-primary-soft hover:bg-neutral-secondary-medium;
+}
+
+.data-table tbody tr.active-row {
+  @apply bg-brand/10;
 }

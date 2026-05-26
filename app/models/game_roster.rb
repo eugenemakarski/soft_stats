@@ -5,4 +5,6 @@ class GameRoster < ApplicationRecord
   validates :batting_order, presence: true, if: -> { available }
   validates :batting_order, absence: true, if: -> { !available }
   validates :batting_order, uniqueness: { scope: :game_id }, allow_nil: true
+
+  default_scope { order(:batting_order) }
 end

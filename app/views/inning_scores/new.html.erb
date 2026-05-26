@@ -1,0 +1,29 @@
+<%# app/views/inning_scores/new.html.erb %>
+<div class="flex flex-col justify-center justify-self-center w-full max-w-xl">
+  <h1 class="text-3xl pb-3">Inning
+    <%= @inning %>
+    — Opponent Score</h1>
+  <div class="flex flex-col py-3">
+    <%= form_with model: [@game, @inning_score] do |form| %>
+      <% if form.object.errors.any? %>
+        <p class="text-red-500"><%= form.object.errors.full_messages.first %></p>
+      <% end %>
+
+      <%= form.hidden_field :inning %>
+      <%= form.hidden_field :our_half %>
+
+      <div class="form-field">
+        <%= form.label :runs, "Opponent runs this inning", class: "form-label" %>
+        <%= form.number_field :runs, min: 0, value: 0, class: "form-input" %>
+      </div>
+
+      <button class="btn-primary self-center">
+        <%= form.submit "Next Inning" %>
+      </button>
+    <% end %>
+
+    <button class="btn-outline self-center">
+      <%= link_to "Back to Game", game_path(@game) %>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<%# app/views/plate_appearances/_form.html.erb %>
+<%= form_with model: [@game, plate_appearance] do |form| %>
+  <% if form.object.errors.any? %>
+    <p class="text-red-500"><%= form.object.errors.full_messages.first %></p>
+  <% end %>
+
+  <%= form.hidden_field :player_id %>
+  <%= form.hidden_field :inning %>
+  <%= form.hidden_field :our_half %>
+  <%= form.hidden_field :outs_before %>
+
+  <div class="flex flex-col gap-4">
+    <div class="form-field">
+      <%= form.label :result, class: "form-label" %>
+      <%= form.select :result,
+                  PlateAppearance.results.keys.map { |r| [r.humanize.titleize, r] },
+                  { include_blank: "Select result" },
+                  class: "form-input" %>
+    </div>
+
+    <div class="form-field">
+      <%= form.label :rbi, "RBI", class: "form-label" %>
+      <%= form.number_field :rbi,
+                        id: "rbi_field",
+                        min: 0,
+                        max: 4,
+                        value: plate_appearance.rbi || 0,
+                        class: "form-input" %>
+    </div>
+
+    <% if on_base_players.any? %>
+      <div
+        id="runners_section"
+        class="<%= plate_appearance.rbi.to_i > 0 ? '' : 'hidden' %>"
+      >
+        <label class="form-label">
+          Who scored?
+        </label>
+        <div class="flex flex-col gap-1">
+          <% on_base_players.each do |player| %>
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="run_scorer_ids[]"
+                value="<%= player.id %>"
+                id="scorer_<%= player.id %>"
+              >
+              <label for="scorer_<%= player.id %>"><%= player.name %></label>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <script>
+        document.getElementById("rbi_field").addEventListener("input", function() {
+          document.getElementById("runners_section").classList.toggle("hidden", parseInt(this.value) <= 0);
+        });
+      </script>
+    <% end %>
+
+    <button class="btn-primary self-center"><%= form.submit "Save" %></button>
+  </div>
+<% end %>

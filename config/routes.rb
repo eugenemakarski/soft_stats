@@ -17,6 +17,8 @@ Rails.application.routes.draw do
           patch :start
         end
         resources :game_rosters, shallow: true, only: [ :index, :create ]
+        resources :plate_appearances, only: [ :new, :create ]
+        resources :inning_scores, only: [ :new, :create ]
       end
     end
   end

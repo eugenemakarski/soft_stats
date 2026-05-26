@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_20_201924) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_24_163139) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -74,6 +74,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_20_201924) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "date"
+    t.boolean "is_home", null: false
     t.string "opponent"
     t.integer "season_id"
     t.integer "status", default: 0, null: false
@@ -81,18 +82,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_20_201924) do
     t.index ["season_id"], name: "index_games_on_season_id"
   end
 
-  create_table "plate_appearances", force: :cascade do |t|
-    t.string "boolean"
+  create_table "inning_scores", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "double_play"
+    t.integer "game_id", null: false
+    t.integer "inning", null: false
+    t.boolean "our_half"
+    t.integer "runs", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_inning_scores_on_game_id"
+  end
+
+  create_table "plate_appearances", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.integer "game_id", null: false
     t.integer "inning"
+    t.integer "outs_before", default: 0
     t.integer "player_id", null: false
     t.integer "rbi"
     t.integer "result"
-    t.boolean "run"
+    t.boolean "top_inning", default: true
     t.datetime "updated_at", null: false
-    t.boolean "walk_off"
     t.index ["game_id"], name: "index_plate_appearances_on_game_id"
     t.index ["player_id"], name: "index_plate_appearances_on_player_id"
   end
@@ -114,6 +123,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_20_201924) do
     t.integer "jersey_number"
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "runs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "plate_appearance_id", null: false
+    t.integer "player_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plate_appearance_id"], name: "index_runs_on_plate_appearance_id"
+    t.index ["player_id"], name: "index_runs_on_player_id"
   end
 
   create_table "seasons", force: :cascade do |t|
@@ -154,11 +172,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_20_201924) do
   add_foreign_key "fielding_positions", "players"
   add_foreign_key "game_rosters", "games"
   add_foreign_key "game_rosters", "players"
+  add_foreign_key "inning_scores", "games"
   add_foreign_key "plate_appearances", "games"
   add_foreign_key "plate_appearances", "players"
   add_foreign_key "player_teams", "players"
   add_foreign_key "player_teams", "seasons"
   add_foreign_key "player_teams", "teams"
+  add_foreign_key "runs", "plate_appearances"
+  add_foreign_key "runs", "players"
   add_foreign_key "seasons", "teams"
   add_foreign_key "sessions", "users"
 end

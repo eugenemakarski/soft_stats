@@ -1,7 +1,89 @@
-<div class="flex flex-col justify-center mt-3">
-  <% @rosters.each do |roster| %>
-    <div class="flex">
-      IN PROGRESS
+<% all_abs = game.plate_appearances.includes(:player).order(:created_at)
+all_fielding = game.fielding_positions.includes(:player)
+
+cur_inning = game.batting_inning
+is_home = !game.is_home %>
+
+<div class="flex flex-col gap-8 w-full max-w-4xl p-4">
+  <div class="w-full max-w-2xl mx-auto">
+    <%# ── Inning tabs ─────────────────────────────────────────── %>
+    <ul
+      class="
+        flex flex-wrap text-sm font-medium text-center border-b border-default
+      "
+      id="inning-tabs"
+      data-tabs-toggle="#inning-tabs-content"
+      data-tabs-active-classes="text-teal hover:text-teal border-teal"
+      data-tabs-inactive-classes="text-blue hover:text-blue border-blue"
+      role="tablist"
+    >
+      <% (1..9).each do |inn| %>
+        <% inn_outs = game.outs_for(inn, is_home)
+        is_active = inn == cur_inning %>
+        <li class="me-2 flex-1" role="presentation">
+          <button
+            id="inning-tab-<%= inn %>"
+            data-tabs-target="#inning-<%= inn %>-content"
+            type="button"
+            role="tab"
+            aria-controls="innings-<%= inn %>"
+            aria-selected="<%= is_active %>"
+            class="
+              inline-block p-4 border-b-2 rounded-t-base hover:text-fg-brand
+              hover:border-brand w-full
+            "
+          >
+            <span class="block"><%= inn.ordinalize %></span>
+            <span
+              class="
+                flex justify-center gap-0.5 mt-1 <%= 'invisible' unless is_active %>
+              "
+            >
+              <% 3.times do |i| %>
+                <span
+                  class="
+                    w-2 h-2 rounded-full <%= i < inn_outs ? 'bg-current' : 'border border-current opacity-40' %>
+                  "
+                ></span>
+              <% end %>
+            </span>
+          </button>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <% (1..9).each do |inn| %>
+    <div id="inning-<%= inn %>-content" class="" role="tabpanel">
+      <div class="flex gap-2">
+        <% next_player_id = game.next_batter_id %>
+        <% half = inn == cur_inning ? game.active_half(inn) : nil %>
+        <% if is_home %>
+          <div class="flex-1">
+            <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
+          </div>
+
+          <div class="flex-1">
+            <%= render "batting",
+            next_player_id: next_player_id,
+            inn: inn,
+            game: @game,
+            active: half == :batting %>
+          </div>
+
+        <% else %>
+          <div class="flex-1">
+            <%= render "batting",
+            next_player_id: next_player_id,
+            inn: inn,
+            game: @game,
+            active: half == :batting %>
+          </div>
+          <div class="flex-1">
+            <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
+          </div>
+
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>
