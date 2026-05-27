@@ -9,9 +9,10 @@ Rails.application.routes.draw do
 
   root "teams#index"
 
+  resources :players
   resources :teams do
     resources :seasons, shallow: true, only: [ :new, :create, :show ] do
-      resources :players, shallow: true
+      resources :player_teams, shallow: true
       resources :games, shallow: true, only: [ :new, :create, :edit, :show ] do
         member do
           patch :start
