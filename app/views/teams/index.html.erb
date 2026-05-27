@@ -19,9 +19,13 @@
     </ul>
 
   </div>
-  <div class="flex justify-center mt-3">
+  <div class="flex flex-col gap-4 justify-center text-center mt-3">
     <%= link_to "New Team",
     new_team_path,
+    class:
+      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+    <%= link_to "Manage Players",
+    players_path,
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   </div>

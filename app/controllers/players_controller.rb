@@ -1,13 +1,8 @@
 class PlayersController < ApplicationController
-  before_action :set_season, only: %i[index new create]
-  before_action :set_player, only: %i[show edit update destroy]
+  before_action :set_player, only: %i[show update edit destroy]
 
   def index
-    @players = Player.joins(:player_teams).where(player_teams: { season_id: @season.id })
-  end
-
-  def show
-    @playerSeason = @player.player_teams.first.season
+    @players = Player.all
   end
 
   def new
@@ -17,12 +12,7 @@ class PlayersController < ApplicationController
   def create
     @player = Player.new(player_params)
     if @player.save
-      @playerTeam = PlayerTeam.create!(
-        player: @player,
-        team_id: @season.team_id,
-        season: @season
-      )
-      redirect_to season_path(@season.id)
+      redirect_to players_path
     else
       render :new, status: :unprocessable_entity
     end
@@ -47,10 +37,6 @@ class PlayersController < ApplicationController
   private
   def set_player
     @player = Player.find(params[:id])
-  end
-
-  def set_season
-    @season = Season.find(params[:season_id])
   end
 
   def player_params

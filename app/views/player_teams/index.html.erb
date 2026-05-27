@@ -1,0 +1,63 @@
+<div class="flex flex-col gap-3 p-5 items-center">
+  <h1 class="font-bold text-4xl">Active Roster</h1>
+  <div
+    class="
+      relative overflow-x-auto bg-neutral-primary shadow-xs rounded-xl border
+      border-default
+    "
+  >
+    <table class="w-full text-sm text-left text-heading">
+      <thead class="text-sm text-heading border-b border-default">
+        <tr>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Name
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Active
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @players.each do |player| %>
+          <tr class="border-b border-default">
+            <th
+              scope="row"
+              class="
+                px-6 py-4 font-medium whitespace-nowrap bg-neutral-secondary-soft
+              "
+            >
+              <%= player.name %>
+            </th>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              <% Rails.logger.debug "Roster: #{@roster.inspect}" %>
+              <% roster_entry = @roster.find { |r| r.player_id == player.id } %>
+              <% if roster_entry %>
+                <%= button_to "Remove",
+                player_team_path(roster_entry),
+                method: :delete,
+                class: "cursor-pointer text-red-400",
+                form_class: "inline" %>
+              <% else %>
+                <%= button_to "Add to Roster",
+                season_player_teams_path(
+                  @season,
+                  player_id: player.id,
+                  team_id: @season.team_id,
+                ),
+                method: :post,
+                class: "cursor-pointer" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-center mt-3">
+    <%= link_to "Back",
+    teams_path,
+    class:
+      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+  </div>
+</div>

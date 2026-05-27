@@ -1,5 +1,5 @@
 <%# app/views/players/_form.html.erb %>
-<%= form_with model: [@season, player] do |form| %>
+<%= form_with model: [player] do |form| %>
   <% if form.object.errors.any? %>
     <p class="error">
       <%= form.object.errors.full_messages.first %>
