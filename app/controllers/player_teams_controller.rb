@@ -11,7 +11,7 @@ class PlayerTeamsController < ApplicationController
 
   def create
     PlayerTeam.find_or_create_by(player_id: params[:player_id], season_id: @season.id, team_id: @season.team_id)
-    redirect_back fallback_location: season_player_teams_path(@season)
+    redirect new_season_player_team_path(@season)
   end
 
   def destroy

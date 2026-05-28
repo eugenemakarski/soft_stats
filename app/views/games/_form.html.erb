@@ -17,6 +17,10 @@
     field: :opponent,
     error: nil,
     disabled: false %>
+    <div class="flex gap-5">
+      <%= form.label :is_home, "Home Game?" %>
+      <%= form.check_box :is_home %>
+    </div>
 
     <%= form.submit class:
                   "px-4 py-2 my-2 self-center border-2 rounded-4xl cursor-pointer hover:bg-white hover:text-black transition-colors" %>

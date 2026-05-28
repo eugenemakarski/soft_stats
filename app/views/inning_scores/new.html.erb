@@ -14,12 +14,10 @@
 
       <div class="form-field">
         <%= form.label :runs, "Opponent runs this inning", class: "form-label" %>
-        <%= form.number_field :runs, min: 0, value: 0, class: "form-input" %>
+        <%= form.number_field :runs, min: 0, class: "form-input" %>
       </div>
 
-      <button class="btn-primary self-center">
-        <%= form.submit "Next Inning" %>
-      </button>
+      <%= form.submit "Next Inning", class: "btn-primary self-center" %>
     <% end %>
 
     <button class="btn-outline self-center">

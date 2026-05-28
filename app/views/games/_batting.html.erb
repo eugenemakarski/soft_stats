@@ -1,6 +1,7 @@
 <% max_abs =
   game.plate_appearances.group_by(&:player_id).values.map(&:count).max || 0 %>
 <% all_abs = game.plate_appearances %>
+
 <div class="flex flex-col gap-2">
   <div
     id="inning-<%= inn %>"
@@ -36,7 +37,7 @@
                 </td>
               <% end %>
               <td class="text-center">
-                <% if is_next && !is_locked && active %>
+                <% if is_next && !inning_locked && active %>
                   <%= link_to "+",
                   new_game_plate_appearance_path(
                     game,
@@ -54,7 +55,7 @@
       </table>
     </div>
 
-    <% if active && !inning_locked %>
+    <% if active %>
       <%= button_to "Next Half Inning →",
       game_inning_scores_path(game),
       method: :post,
@@ -66,121 +67,6 @@
       },
       class: "btn-outline mt-3 self-start" %>
     <% end %>
-  </div>
-
-  <div
-    id="new-ab-modal"
-    tabindex="-1"
-    aria-hidden="true"
-    class="
-      hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50
-      justify-center items-center w-full md_inset-0 h-[calc(100%-1rem)] max-h-full
-    "
-  >
-    <div class="relative p-4 w-full max-w-md max-h-full">
-      <!-- Modal content -->
-      <div
-        class="
-          relative bg-neutral-primary-soft border border-default rounded-base shadow-sm
-          p-4 md:p-6
-        "
-      >
-        <!-- Modal header -->
-        <div
-          class="
-            flex items-center justify-between border-b border-default pb-4 md:pb-5
-          "
-        >
-          <h3 class="text-lg font-medium text-heading">
-            Record At-Bat
-          </h3>
-          <button
-            type="button"
-            class="
-              text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading
-              rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center
-            "
-            data-modal-hide="new-ab-modal"
-          >
-            <!-- ADD X BUTTON -->
-            <span class="sr-only">Close modal</span>
-          </button>
-        </div>
-        <!-- Modal body -->
-        <form action="#">
-          <div class="grid gap-4 grid-cols-2 py-4 md:py-6">
-            <div class="col-span-2">
-              <p class="text-heading font-medium" id="ab-player-name"></p>
-            </div>
-            <div class="col-span-2 sm:col-span-1">
-              <label for="position" class="block mb-2.5 text-sm font-medium text-heading">Position</label>
-              <input
-                type="text"
-                name="position"
-                id="position"
-                class="
-                  bg-neutral-secondary-medium border border-default-medium text-heading text-sm
-                  rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5
-                  shadow-xs placeholder:text-body
-                "
-                placeholder="React Developer"
-                required=""
-              >
-            </div>
-            <div class="col-span-2 sm:col-span-1">
-              <label for="category" class="block mb-2.5 text-sm font-medium text-heading">Status</label>
-              <select
-                id="category"
-                class="
-                  block w-full px-3 py-2.5 bg-neutral-secondary-medium border
-                  border-default-medium text-heading text-sm rounded-base focus:ring-brand
-                  focus:border-brand shadow-xs placeholder:text-body
-                "
-              >
-                <option selected="">Online</option>
-                <option value="offline">Offline</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-            <div class="col-span-2">
-              <label for="biography" class="block mb-2.5 text-sm font-medium text-heading">Biography</label>
-              <textarea
-                id="biography"
-                rows="4"
-                class="
-                  block bg-neutral-secondary-medium border border-default-medium text-heading
-                  text-sm rounded-base focus:ring-brand focus:border-brand w-full p-3.5 shadow-xs
-                  placeholder:text-body
-                "
-                placeholder="Write a short biography here"
-              ></textarea>
-            </div>
-          </div>
-          <div class="flex items-center space-x-4 border-t border-default pt-4 md:pt-6">
-            <button
-              type="submit"
-              class="
-                inline-flex items-center text-white bg-brand hover:bg-brand-strong box-border
-                border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs
-                font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none
-              "
-            >
-              Update user
-            </button>
-            <button
-              data-modal-hide="crud-modal"
-              type="button"
-              class="
-                text-body bg-neutral-secondary-medium box-border border border-default-medium
-                hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4
-                focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm
-                px-4 py-2.5 focus:outline-none
-              "
-            >Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 
 </div>

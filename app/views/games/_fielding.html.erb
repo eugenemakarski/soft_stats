@@ -1,19 +1,7 @@
 <div class="flex flex-col gap-2">
-  <div class="">
-    <div class="relative overflow-x-auto rounded-base border border-default mt-4">
-    </div>
-
-    <% if active %>
-      <%= button_to "NEXT SHIT →",
-      game_inning_scores_path(game),
-      method: :post,
-      params: {
-        inning_score: {
-          inning: inn,
-          our_half: true,
-        },
-      },
-      class: "btn-outline mt-3 self-start" %>
-    <% end %>
-  </div>
+  <% if active %>
+    <%= link_to "Input Opponent Score",
+    new_game_inning_score_path(game),
+    class: "btn-outline mt-3 self-start" %>
+  <% end %>
 </div>

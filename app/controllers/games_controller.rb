@@ -48,6 +48,6 @@ class GamesController < ApplicationController
   end
 
   def game_params
-    params.expect(game: [ :date, :opponent ])
+    params.expect(game: [ :date, :opponent, :is_home ])
   end
 end

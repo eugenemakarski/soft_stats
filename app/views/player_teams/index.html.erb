@@ -13,12 +13,13 @@
             Name
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
-            Active
+            Action
           </th>
         </tr>
       </thead>
       <tbody>
         <% @players.each do |player| %>
+          <% roster_entry = @roster.find { |r| r.player_id == player.id } %>
           <tr class="border-b border-default">
             <th
               scope="row"
@@ -26,11 +27,13 @@
                 px-6 py-4 font-medium whitespace-nowrap bg-neutral-secondary-soft
               "
             >
-              <%= player.name %>
+              <%= if roster_entry
+                link_to(player.name, player_team_path(roster_entry))
+              else
+                player.name
+              end %>
             </th>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              <% Rails.logger.debug "Roster: #{@roster.inspect}" %>
-              <% roster_entry = @roster.find { |r| r.player_id == player.id } %>
               <% if roster_entry %>
                 <%= button_to "Remove",
                 player_team_path(roster_entry),

@@ -17,26 +17,32 @@ class Game < ApplicationRecord
     inning_scores.where(our_half: false).sum(:runs)
   end
 
-  def current_inning
-    plate_appearances.maximum(:inning) || 1
-  end
 
   def batting_inning
     (inning_scores.where(our_half: true).maximum(:inning) || 0) + 1
   end
 
+  def fielding_inning
+    (inning_scores.where(our_half: false).maximum(:inning) || 0) + 1
+  end
+
+  def current_inning
+    [ batting_inning, fielding_inning ].min
+  end
+
   def active_half(inning)
-    our_done = inning_scores.any? { |s| s.inning == inning && s.our_half? }
-    their_done = inning_scores.any? { |s| s.inning == inning && !s.our_half? }
+  scores = inning_scores.reload
+    our_done = scores.any? { |s| s.inning == inning && s.our_half? }
+    their_done = scores.any? { |s| s.inning == inning && !s.our_half? }
 
     return nil if our_done && their_done
 
     if is_home
       return :fielding if !their_done
-      return :batting if !our_done
+      :batting if !our_done
     else
       return :batting if !our_done
-      return :fielding if !their_done
+      :fielding if !their_done
     end
   end
 
@@ -58,7 +64,7 @@ class Game < ApplicationRecord
 
   def next_batter_id
    last_pa = plate_appearances.order(:created_at).last
-    return game_rosters.first unless last_pa
+   return game_rosters.first.player_id unless last_pa
 
    last_batting_order = game_rosters.find_by(player_id: last_pa.player_id)&.batting_order.to_i
     game_rosters.find_by("batting_order > ?", last_batting_order)&.player_id ||

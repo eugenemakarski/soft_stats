@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   resources :players
   resources :teams do
     resources :seasons, shallow: true, only: [ :new, :create, :show ] do
-      resources :player_teams, shallow: true
+      resources :player_teams, shallow: true do
+        resources :player_positions, only: [ :create, :destroy ]
+      end
       resources :games, shallow: true, only: [ :new, :create, :edit, :show ] do
         member do
           patch :start
