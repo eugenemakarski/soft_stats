@@ -7,9 +7,11 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+puts "Running seeds..."
 if Rails.env.production? &&
    ActiveRecord::Base.connection.table_exists?(:users) &&
    ActiveRecord::Base.connection.column_exists?(:users, :email)
+  puts "Creating seed user..."
   User.find_or_create_by(email: ENV["SEED_USER_EMAIL"]) do |u|
     u.password = ENV["SEED_USER_PASSWORD"]
     u.password_confirmation = ENV["SEED_USER_PASSWORD"]
