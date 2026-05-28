@@ -7,11 +7,6 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-Rails.logger.info "ENV: #{Rails.env}"
-Rails.logger.info "Table exists: #{ActiveRecord::Base.connection.table_exists?(:users)}"
-Rails.logger.info "Column exists: #{ActiveRecord::Base.connection.column_exists?(:users, :email)}"
-Rails.logger.info "Email env: #{ENV["SEED_USER_EMAIL"].present?}"
-
 if Rails.env.production? &&
    ActiveRecord::Base.connection.table_exists?(:users) &&
    ActiveRecord::Base.connection.column_exists?(:users, :email)
