@@ -10,7 +10,7 @@ class PlayerTeamsController < ApplicationController
   end
 
   def create
-    pt = PlayerTeam.find_or_create_by(player_id: params[:player_id], season_id: @season.id, team_id: @season.team_id)
+    PlayerTeam.find_or_create_by(player_id: params[:player_id], season_id: @season.id, team_id: @season.team_id)
     redirect_back fallback_location: season_player_teams_path(@season)
   end
 
