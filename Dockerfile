@@ -48,7 +48,7 @@ RUN bundle install && \
 COPY . .
 
 # Install JavaScript dependencies for asset compilation
-COPY package.json ./
+COPY package.json ./package-lock.json
 RUN npm install --omit=dev
 
 # Precompile bootsnap code for faster boot times.
@@ -61,15 +61,14 @@ RUN sed -i 's/ruby\.ruby4\.0$/ruby/' bin/*
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-
-
-
 # Final stage for app image
 FROM base
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    mkdir -p /rails/var/data && \
+    chown -R rails:rails /rails/var
 USER 1000:1000
 
 # Copy built artifacts: gems, application
