@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
   before_action :set_season, only: %i[new create]
-  before_action :set_game, only: %i[show start end_half_inning]
+  before_action :set_game, only: %i[show start end_half_inning generate_lineup]
   def new
     @game = Game.new
   end
@@ -19,11 +19,17 @@ class GamesController < ApplicationController
     @player_options = Player.joins(:player_teams).where(player_teams: { season_id: @game.season_id })
     @rosters = @game.game_rosters.includes(:player)
     @game.inning_scores.load
+    @fielding = FieldingPosition.where(game_id: @game).includes(:player)
   end
 
   def start
     @game.in_progress!
     redirect_to game_path(@game)
+  end
+
+  def generate_lineup
+    FieldingLineupGenerator.new(@game).generate_and_save
+    redirect_to game_path(@game), notice: "Fielding lineup generated"
   end
 
   def end_half_inning

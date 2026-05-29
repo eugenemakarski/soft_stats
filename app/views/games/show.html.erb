@@ -18,6 +18,11 @@
     game_game_rosters_path(@game),
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+    <%= button_to "Generate Fielding Lineup",
+    generate_lineup_game_path(@game),
+    method: :post,
+    class:
+      "border-2 border-green-400 px-4 py-2 rounded-4xl text-green-500 hover:bg-green-400 hover:text-white" %>
     <%= button_to "START GAME",
     start_game_path(@game),
     method: :patch,

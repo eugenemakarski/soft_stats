@@ -4,7 +4,7 @@ all_fielding = game.fielding_positions.includes(:player)
 cur_inning = game.current_inning
 is_home = game.is_home %>
 
-<div class="flex flex-col gap-8 w-full max-w-4xl p-4">
+<div class="flex flex-col gap-8 w-full max-w-8xl p-4">
   <div class="w-full max-w-2xl mx-auto">
     <%# ── Inning tabs ─────────────────────────────────────────── %>
     <ul
@@ -58,11 +58,11 @@ is_home = game.is_home %>
         <% next_player_id = game.next_batter_id %>
         <% half = inn == cur_inning ? game.active_half(inn) : nil %>
         <% if is_home %>
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
           </div>
 
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <%= render "batting",
             next_player_id: next_player_id,
             inn: inn,
@@ -71,14 +71,14 @@ is_home = game.is_home %>
           </div>
 
         <% else %>
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <%= render "batting",
             next_player_id: next_player_id,
             inn: inn,
             game: @game,
             active: half == :batting %>
           </div>
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
           </div>
 

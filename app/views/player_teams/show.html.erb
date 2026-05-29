@@ -1,0 +1,47 @@
+<%# app/views/player_teams/show.html.erb %>
+<div class="flex flex-col gap-3 p-5 items-center">
+  <h1 class="font-bold text-4xl"><%= @roster.player.name %></h1>
+
+  <%= form_with model: @roster, url: player_team_path(@roster), method: :patch do |form| %>
+    <div data-controller="positions" class="flex flex-col gap-3">
+      <h2 class="font-semibold text-lg">Fielding Positions</h2>
+
+      <div id="position-rows" class="text-teal">
+        <%= form.fields_for :player_positions do |pp| %>
+          <%= render "position_fields", form: pp %>
+        <% end %>
+      </div>
+
+      <template data-positions-target="template">
+        <%= form.fields_for :player_positions, PlayerPosition.new, child_index: "NEW_RECORD" do |pp| %>
+          <%= render "position_fields", form: pp %>
+        <% end %>
+      </template>
+
+      <button
+        type="button"
+        data-action="click->positions#add"
+        class="
+          self-start border-2 border-blue-400 px-3 py-1 rounded-4xl text-blue-500
+          hover:bg-blue-400 hover:text-white text-sm
+        "
+      >
+        + Add Position
+      </button>
+
+      <button
+        class="
+          self-center border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500
+          hover:bg-blue-400 hover:text-white
+        "
+      >
+        Save
+      </button>
+    </div>
+  <% end %>
+
+  <%= link_to "Back",
+  season_player_teams_path(@roster.season_id),
+  class:
+    "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+</div>

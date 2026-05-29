@@ -1,0 +1,19 @@
+<%# app/views/player_teams/_position_fields.html.erb %>
+<div class="flex gap-2 items-center">
+  <%= form.select :position,
+              PlayerPosition.positions.keys,
+              { prompt: "Position" },
+              class: "border rounded px-2 py-1 text-sm" %>
+
+  <%= form.number_field :cost,
+                    placeholder: "Score (1=best)",
+                    min: 1,
+                    class: "border rounded px-2 py-1 text-sm w-32" %>
+
+  <%= form.hidden_field :_destroy, class: "destroy-field" %>
+  <button
+    type="button"
+    onclick="this.previousElementSibling.value='1'; this.closest('div').style.display='none'"
+    class="text-red-400 hover:text-red-600 text-sm"
+  >✕</button>
+</div>

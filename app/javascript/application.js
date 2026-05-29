@@ -2,3 +2,4 @@
 import 'flowbite';
 
 import "@hotwired/turbo-rails"
+import "controllers"

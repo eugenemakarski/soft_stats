@@ -11,19 +11,12 @@ class InningScoresController < ApplicationController
       our_half = ActiveModel::Type::Boolean.new.cast(inning_score_params[:our_half])
 
     if our_half
-      puts "OUR HALF"
       runs = Run.joins(:plate_appearance)
         .where(plate_appearances: { game_id: @game.id, inning: inning })
         .count
     else
-      puts "NOT OUR HALF"
       runs = inning_score_params[:runs]
     end
-
-    puts "RUNS:"
-    puts "RUNS: #{runs.inspect}"
-    puts "PARAMS: #{inning_score_params[:runs].inspect}"
-
 
     @inning_score = @game.inning_scores.find_or_initialize_by(
       inning: inning,

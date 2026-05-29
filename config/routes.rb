@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       resources :games, shallow: true, only: [ :new, :create, :edit, :show ] do
         member do
           patch :start
+          post :generate_lineup
         end
         resources :game_rosters, shallow: true, only: [ :index, :create ]
         resources :plate_appearances, only: [ :new, :create ]

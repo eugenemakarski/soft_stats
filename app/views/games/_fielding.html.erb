@@ -1,7 +1,64 @@
-<div class="flex flex-col gap-2">
-  <% if active %>
-    <%= link_to "Input Opponent Score",
-    new_game_inning_score_path(game),
-    class: "btn-outline mt-3 self-start" %>
-  <% end %>
+<% fielding_inning = @fielding.where(inning: inn).order(:position) %>
+<% bench =
+  @player_options.reject { |p| fielding_inning.map(&:player_id).include?(p.id) } %>
+<div
+  id="inning-<%= inn %>"
+  class=""
+  role="tabpanel"
+  aria-labelledby="inning-tab-<%= inn %>"
+>
+  <div class="rounded-base border border-default mt-4 overflow-hidden">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="w-16">Pos</th>
+          <th>Player</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% fielding_inning.each do |f| %>
+          <tr>
+            <td>
+              <span
+                class="
+                  inline-block text-xs font-bold px-2 py-0.5 rounded bg-primary/10 text-primary
+                "
+              >
+                <%= f.position %>
+              </span>
+            </td>
+            <td class="font-medium text-heading"><%= f.player.name %></td>
+          </tr>
+        <% end %>
+        <% if bench.any? %>
+          <tr>
+            <td
+              colspan="2"
+              class="
+                text-xs font-bold text-body uppercase tracking-wide px-4 py-1 bg-muted/30
+              "
+            >Bench</td>
+          </tr>
+          <% bench.each do |p| %>
+            <tr class="opacity-60">
+              <td><span
+                  class="
+                    inline-block text-xs font-bold px-2 py-0.5 rounded bg-muted text-body
+                  "
+                >—</span></td>
+              <td class="font-medium text-heading"><%= p.name %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if active %>
+      <div class="p-3 border-t border-default">
+        <%= link_to "Input Opponent Score",
+        new_game_inning_score_path(game),
+        class: "btn-outline" %>
+      </div>
+    <% end %>
+  </div>
 </div>

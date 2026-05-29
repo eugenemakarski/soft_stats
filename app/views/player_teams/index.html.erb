@@ -15,6 +15,12 @@
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             Action
           </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Positions
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Edit Pos
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -27,11 +33,7 @@
                 px-6 py-4 font-medium whitespace-nowrap bg-neutral-secondary-soft
               "
             >
-              <%= if roster_entry
-                link_to(player.name, player_team_path(roster_entry))
-              else
-                player.name
-              end %>
+              <%= player.name %>
             </th>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
               <% if roster_entry %>
@@ -49,6 +51,14 @@
                 ),
                 method: :post,
                 class: "cursor-pointer" %>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft cursor-pointer">
+              <%= player.player_teams.flat_map(&:player_positions).map(&:position).join(", ") %>
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              <% if roster_entry %>
+                <%= link_to "edit", player_team_path(roster_entry) %>
               <% end %>
             </td>
           </tr>
