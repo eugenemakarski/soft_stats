@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_26_011451) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_31_180458) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_26_011451) do
     t.integer "batting_order"
     t.datetime "created_at", null: false
     t.integer "game_id", null: false
+    t.boolean "is_pitcher", default: false, null: false
     t.integer "player_id", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_game_rosters_on_game_id"

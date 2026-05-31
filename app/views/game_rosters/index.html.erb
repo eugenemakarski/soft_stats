@@ -25,6 +25,7 @@
                             class:
                               "w-14 text-center border border-default rounded px-1 py-1 text-sm mx-auto" %>
           <%= form.check_box "roster[#{player.id}][available]", { class: "mx-auto", checked: true }, "1", "0" %>
+          <%= form.check_box "roster[#{player.id}][is_pitcher]", { class: "mx-auto", checked: true }, "1", "0" %>
         </div>
       <% end %>
     </div>

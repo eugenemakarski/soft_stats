@@ -11,17 +11,15 @@
 # Pitcher is fixed for the whole game and excluded from rotation (TODO: add pitcher boolean to game_rosters)
 
 class FieldingLineupGenerator
-  FIELD_POSITIONS = [2, 3, 4, 5, 6, 7, 8, 9].freeze  # excludes pitcher (1)
-  DEFAULT_INNINGS = 6
+  FIELD_POSITIONS = [ 2, 3, 4, 5, 6, 7, 8, 9 ].freeze  # excludes pitcher (1)
+  DEFAULT_INNINGS = 9
 
   def initialize(game, innings: DEFAULT_INNINGS)
     @game = game
     @innings = innings
 
-    # TODO: exclude pitcher once game_rosters.pitcher column exists
-    # For now, all available players are in the rotation
     @players = game.game_rosters
-                   .where(available: true)
+                   .where(available: true, is_pitcher: false)
                    .includes(player: { player_teams: :player_positions })
                    .to_a
   end
@@ -85,10 +83,10 @@ class FieldingLineupGenerator
   # Players with the highest bench_equivalent get priority to play.
   # Ties broken by batting_order (lower = plays first when tied).
   def select_players(bench_equivalent)
-    sorted = @players.sort_by { |r| [-bench_equivalent[r.player_id], r.batting_order.to_i] }
+    sorted = @players.sort_by { |r| [ -bench_equivalent[r.player_id], r.batting_order.to_i ] }
     playing = sorted.first(FIELD_POSITIONS.size)
     sitting = sorted.drop(FIELD_POSITIONS.size)
-    [playing, sitting]
+    [ playing, sitting ]
   end
 
   # Builds an n×n cost matrix: rows=players, cols=FIELD_POSITIONS.
@@ -98,7 +96,7 @@ class FieldingLineupGenerator
     playing.map do |roster|
       player_team = roster.player.player_teams.find { |pt| pt.season_id == @game.season_id }
       pos_costs   = (player_team&.player_positions || []).each_with_object({}) do |pp, h|
-        h[pp.position] = pp.cost
+        h[PositionEnum::POSITIONS[pp.position.to_sym]] = pp.cost
       end
 
       FIELD_POSITIONS.map do |pos|

@@ -14,6 +14,7 @@ class GameRostersController < ApplicationController
       roster = GameRoster.find_or_initialize_by(game_id: @game.id, player_id: player_id)
       roster.batting_order = attrs[:batting_order].presence
       roster.available = attrs[:available] == "1"
+      roster.is_pitcher = attrs[:available] == "1"
       rosters << roster
     end
 
