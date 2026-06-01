@@ -44,8 +44,6 @@ class PlateAppearancesController < ApplicationController
     @game = Game.find(params[:game_id])
   end
 
-
-
   def plate_appearance_params
     params.expect(plate_appearance: [ :player_id, :inning, :top_inning, :result, :rbi, :outs_before ])
   end
@@ -57,8 +55,8 @@ class PlateAppearancesController < ApplicationController
                            .pluck(:player_id)
 
     @game.plate_appearances
-         .where(inning: inning, top_inning: top)
-         .where(result: ON_BASE_RESULTS.map { |r| PlateAppearance.results[r] })
+         .where(inning: inning)
+         .where(result: ON_BASE_RESULTS)
          .where.not(player_id: scored_player_ids)
          .includes(:player)
          .map(&:player)

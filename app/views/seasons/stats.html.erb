@@ -15,44 +15,43 @@
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             Name
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             PA
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             AB
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             H
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             HR
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             AVG
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             OBP
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             SLG
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             OPS
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             Doubles
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             Triples
           </th>
-          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+          <th scope="col" class="px-6 py-3 font-medium">
             Doubles
           </th>
         </tr>
       </thead>
       <tbody>
         <% @players.each do |player| %>
-          <% roster_entry = @roster.find { |r| r.player_id == player.id } %>
           <tr class="border-b border-default">
             <th
               scope="row"
@@ -62,32 +61,40 @@
             >
               <%= player.name %>
             </th>
-            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              <% if roster_entry %>
-                <%= button_to "Remove",
-                player_team_path(roster_entry),
-                method: :delete,
-                class: "cursor-pointer text-red-400",
-                form_class: "inline" %>
-              <% else %>
-                <%= button_to "Add to Roster",
-                season_player_teams_path(
-                  @season,
-                  player_id: player.id,
-                  team_id: @season.team_id,
-                ),
-                method: :post,
-                class: "cursor-pointer" %>
-              <% end %>
-            </td>
-            <td class="px-6 py-4 bg-neutral-secondary-soft cursor-pointer">
-              <%= player.player_teams.flat_map(&:player_positions).map(&:position).join(", ") %>
+            <td class="px-6 py-4 cursor-pointer">
+              ab
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              <% if roster_entry %>
-                <%= link_to "edit", player_team_path(roster_entry) %>
-              <% end %>
+              ab
             </td>
+            <td class="px-6 py-4 text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
+              ab
+            </td>
+            <td class="px-6 py-4 text-body cursor-pointer">
+              ab
+            </td>
+
           </tr>
         <% end %>
       </tbody>
@@ -100,4 +107,4 @@
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   </div>
-  <
+</div>

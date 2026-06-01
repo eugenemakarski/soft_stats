@@ -64,7 +64,7 @@ class Game < ApplicationRecord
 
   def next_batter_id
    last_pa = plate_appearances.order(:created_at).last
-   return game_rosters.first.player_id unless last_pa
+   return game_rosters.first&.player_id unless last_pa
 
    last_batting_order = game_rosters.find_by(player_id: last_pa.player_id)&.batting_order.to_i
     game_rosters.find_by("batting_order > ?", last_batting_order)&.player_id ||
