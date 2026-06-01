@@ -16,10 +16,10 @@ class GamesController < ApplicationController
   end
 
   def show
-    @player_options = Player.joins(:player_teams).where(player_teams: { season_id: @game.season_id })
-    @rosters = @game.game_rosters.includes(:player)
+    @rosters = @game.game_rosters.includes(:player).where(available: true)
     @game.inning_scores.load
-    @fielding = FieldingPosition.where(game_id: @game).includes(:player)
+    @fielding = FieldingPosition.where(game_id: @game.id, player_id: @rosters.map(&:player_id))
+                            .includes(:player)
   end
 
   def start

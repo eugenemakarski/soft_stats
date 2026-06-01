@@ -1,6 +1,6 @@
-<% fielding_inning = @fielding.where(inning: inn).order(:position) %>
+<% fielding_inning_lineup = @fielding.where(inning: inn).order(:position) %>
 <% bench =
-  @player_options.reject { |p| fielding_inning.map(&:player_id).include?(p.id) } %>
+  @rosters.reject { |p| fielding_inning_lineup.map(&:player_id).include?(p.id) } %>
 <div
   id="inning-<%= inn %>"
   class=""
@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <% fielding_inning.each do |f| %>
+        <% fielding_inning_lineup.each do |f| %>
           <tr>
             <td>
               <span
@@ -46,7 +46,7 @@
                     inline-block text-xs font-bold px-2 py-0.5 rounded bg-muted text-body
                   "
                 >—</span></td>
-              <td class="font-medium text-heading"><%= p.name %></td>
+              <td class="font-medium text-heading"><%= p.player.name %></td>
             </tr>
           <% end %>
         <% end %>
