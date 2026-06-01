@@ -28,13 +28,19 @@
 
   <div class="flex justify-center mt-3">
     <%= link_to "Back",
-    teams_path,
+    team_path(@season.team_id),
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   </div>
   <div class="flex justify-center mt-3">
     <%= link_to "Roster",
     season_player_teams_path(@season),
+    class:
+      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+  </div>
+  <div class="flex justify-center mt-3">
+    <%= link_to "Stats",
+    stats_season_path(@season),
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   </div>

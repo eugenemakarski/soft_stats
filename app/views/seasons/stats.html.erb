@@ -1,5 +1,8 @@
 <div class="flex flex-col gap-3 p-5 items-center">
-  <h1 class="font-bold text-4xl">Active Roster</h1>
+  <h1 class="font-bold text-4xl">
+    <%= @season.season %>
+    Stats
+  </h1>
   <div
     class="
       relative overflow-x-auto bg-neutral-primary shadow-xs rounded-xl border
@@ -13,13 +16,37 @@
             Name
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
-            Action
+            PA
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
-            Positions
+            AB
           </th>
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
-            Edit Pos
+            H
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            HR
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            AVG
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            OBP
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            SLG
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            OPS
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Doubles
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Triples
+          </th>
+          <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
+            Doubles
           </th>
         </tr>
       </thead>
@@ -73,4 +100,4 @@
     class:
       "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
   </div>
-</div>
+  <

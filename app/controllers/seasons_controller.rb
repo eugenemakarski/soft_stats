@@ -1,8 +1,8 @@
 class SeasonsController < ApplicationController
-  before_action :set_season, only: %i[show]
+  before_action :set_season, only: %i[show stats]
   before_action :set_team, only: %i[create new]
-  before_action :set_players, only: %i[show]
-  before_action :set_games, only: %i[show]
+  before_action :set_players, only: %i[show stats]
+  before_action :set_games, only: %i[show stats]
 
   def show
   end
@@ -20,6 +20,12 @@ class SeasonsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
+  def stats
+    game_ids = @games.pluck(:id)
+    @abs = PlateAppearance.where(game_id: game_ids)
+  end
+
 
   private
   def set_season

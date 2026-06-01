@@ -12,20 +12,21 @@
         w-96 bg-neutral-primary-soft border border-default rounded-xl shadow-xs p-4
       "
     >
-      <div class="grid grid-cols-3 font-semibold text-sm mb-2 px-2">
+      <div class="grid grid-cols-4 font-semibold text-sm mb-2 px-2">
         <span>Player</span>
         <span class="text-center">Batting #</span>
+        <span class="text-center">Pitcher?</span>
         <span class="text-center">Available</span>
       </div>
       <% @player_options.each do |player| %>
-        <div class="grid grid-cols-3 items-center py-2 border-t border-default">
+        <div class="grid grid-cols-4 items-center py-2 border-t border-default">
           <span class="text-sm"><%= player.name %></span>
           <%= form.number_field "roster[#{player.id}][batting_order]",
                             placeholder: "#",
                             class:
                               "w-14 text-center border border-default rounded px-1 py-1 text-sm mx-auto" %>
+          <%= form.check_box "roster[#{player.id}][is_pitcher]", { class: "mx-auto", checked: false }, "1", "0" %>
           <%= form.check_box "roster[#{player.id}][available]", { class: "mx-auto", checked: true }, "1", "0" %>
-          <%= form.check_box "roster[#{player.id}][is_pitcher]", { class: "mx-auto", checked: true }, "1", "0" %>
         </div>
       <% end %>
     </div>

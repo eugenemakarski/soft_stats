@@ -14,8 +14,14 @@ class GameRostersController < ApplicationController
       roster = GameRoster.find_or_initialize_by(game_id: @game.id, player_id: player_id)
       roster.batting_order = attrs[:batting_order].presence
       roster.available = attrs[:available] == "1"
-      roster.is_pitcher = attrs[:available] == "1"
+      roster.is_pitcher = attrs[:is_pitcher] == "1"
       rosters << roster
+    end
+
+    pitcher_count = rosters.count(&:is_pitcher?)
+    if pitcher_count != 1
+      flash[:alert] = "Game must have exactly 1 pitcher"
+      redirect_to game_game_rosters_path(@game) and return
     end
 
     if rosters.all?(&:valid?)
