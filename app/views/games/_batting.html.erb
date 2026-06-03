@@ -1,8 +1,17 @@
 <% max_abs =
   game.plate_appearances.group_by(&:player_id).values.map(&:count).max || 0 %>
 <% all_abs = game.plate_appearances %>
+<% inning_outs = game.outs(game.current_inning, game.is_home) %>
 
 <div class="flex flex-col gap-2">
+  <h2 class="text-center">
+    <% if @game.is_home %>
+      BOTTOM
+      <%= inn %>
+    <% else %>
+      TOP
+    <% end %>
+  </h2>
   <div
     id="inning-<%= inn %>"
     class=""
@@ -23,17 +32,25 @@
         </thead>
         <tbody>
           <%# locked if inning_score exists for this inning with our_half %>
-          <% inning_locked = game.inning_scores.any? { |s| s.inning == inn && s.our_half? } %>
+          <% inning_locked =
+            game.inning_scores.any? { |s| s.inning == inn && s.our_half? } ||
+              inning_outs >= 3 %>
           <% @rosters.each do |roster| %>
-            <% player_abs = all_abs.select { |pa| pa.player_id == roster.player_id }
-            is_next = roster.player_id == next_player_id %>
+            <% player_abs = all_abs.select { |pa| pa.player_id == roster.player_id } %>
+            <% is_next =
+              if next_player_id.nil?
+                roster == @rosters.first
+              else
+                roster.player_id == next_player_id
+              end %>
+
             <tr class="<%= is_next ? 'active-row' : '' %>">
               <td class="text-xs text-body"><%= roster.batting_order %></td>
               <td class="font-medium text-heading whitespace-nowrap"><%= roster.player.name %></td>
               <% (1..max_abs).each do |ab_num| %>
                 <td class="text-center">
                   <% pa = player_abs[ab_num - 1] %>
-                  <%= pa ? pa_result_chip(pa.result) : "" %>
+                  <%= pa ? pa_result_chip(pa) : "" %>
                 </td>
               <% end %>
               <td class="text-center">
@@ -48,6 +65,29 @@
                   class:
                     "w-7 h-7 flex items-center justify-center rounded-full bg-brand hover:bg-brand-strong text-white font-bold text-base leading-none mx-auto" %>
                 <% end %>
+                <% if !is_next && !inning_locked && active && game.players_with_ab_this_inning.include?(roster.player_id) %>
+                  <% player_abs = all_abs.select { |pa| pa.player_id == roster.player_id } %>
+                  <%= link_to edit_plate_appearance_path(player_abs.last) do %>
+                    <svg
+                      class="w-6 h-6 text-gray-800 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                      />
+                    </svg>
+                  <% end %>
+                <% end %>
+
               </td>
             </tr>
           <% end %>
@@ -64,6 +104,10 @@
           inning: inn,
           our_half: true,
         },
+      },
+      data: {
+        turbo_confirm:
+          inning_outs < 3 ? "Are you sure? There are only #{inning_outs} outs." : nil,
       },
       class: "btn-outline mt-3 self-start" %>
     <% end %>

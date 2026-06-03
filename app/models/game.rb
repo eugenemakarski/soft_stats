@@ -17,6 +17,9 @@ class Game < ApplicationRecord
     inning_scores.where(our_half: false).sum(:runs)
   end
 
+  def inning_score(inning, our_half)
+    inning_scores.where(our_half: our_half, inning: inning)
+  end
 
   def batting_inning
     (inning_scores.where(our_half: true).maximum(:inning) || 0) + 1
@@ -46,13 +49,8 @@ class Game < ApplicationRecord
     end
   end
 
-  # get outs for current batting inning
-  def outs
-    outs_for(current_inning, current_top_inning)
-  end
-
   # get outs for given top/bottom inning
-  def outs_for(inning, is_home)
+  def outs(inning, is_home)
     plate_appearances
       .where(inning: inning, top_inning: !is_home)
       .sum { |pa| pa.result == "double_play" ? 2 : OUT_RESULTS.include?(pa.result) ? 1 : 0 }
@@ -64,13 +62,17 @@ class Game < ApplicationRecord
 
   def next_batter_id
    last_pa = plate_appearances.order(:created_at).last
-   return game_rosters.first&.player_id unless last_pa
+   available = game_rosters.where(available: true)
+   return available.first&.player_id unless last_pa
 
-   last_batting_order = game_rosters.find_by(player_id: last_pa.player_id)&.batting_order.to_i
-    game_rosters.find_by("batting_order > ?", last_batting_order)&.player_id ||
-      game_rosters.first&.player_id
+   last_batting_order = available.find_by(player_id: last_pa.player_id)&.batting_order.to_i
+   available.find_by("batting_order > ?", last_batting_order)&.player_id ||
+    available.first&.player_id
   end
 
+  def players_with_ab_this_inning
+    plate_appearances.where(inning: current_inning).pluck(:player_id)
+  end
 
   def half_inning_pas
     plate_appearances.where(inning: current_inning, top_inning: current_top_inning)

@@ -1,5 +1,7 @@
 class PlateAppearancesController < ApplicationController
-  before_action :set_game
+before_action :set_game, only: [ :new, :create ]
+before_action :set_plate_appearance, only: [ :edit, :update ]
+
 
   ON_BASE_RESULTS = %w[single double triple walk hbp fielders_choice error].freeze
 
@@ -38,26 +40,62 @@ class PlateAppearancesController < ApplicationController
     end
   end
 
+  def update
+    @game = @plate_appearance.game
+    @on_base_players = on_base_players(@plate_appearance.inning, @plate_appearance.top_inning, exclude_player_id: @plate_appearance.player_id)
+    inning_locked = @game.inning_scores.any? { |s| s.inning == @plate_appearance.inning && s.our_half? }
+    return redirect_to @game, alert: "Inning is locked" if inning_locked
+
+    scorer_ids = Array(params[:run_scorer_ids])
+    rbi_count = params[:plate_appearance][:rbi].to_i
+    home_run = params[:plate_appearance][:result] == "home_run"
+    expected_scorers = home_run ? rbi_count - 1 : rbi_count
+
+    if rbi_count > 0 && scorer_ids.length != expected_scorers
+      @plate_appearance.errors.add(:rbi, "is #{rbi_count} but #{scorer_ids.length} runner(s) were selected")
+      render :edit, status: :unprocessable_entity and return
+    end
+
+    if @plate_appearance.update(plate_appearance_params)
+      @plate_appearance.run.destroy_all
+      Run.create!(plate_appearance: @plate_appearance, player_id: @plate_appearance.player_id) if home_run
+      mark_runners_scored(scorer_ids) if scorer_ids.any?
+      redirect_to params[:return_to] || game_path(@game)
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    @game = @plate_appearance.game
+    @on_base_players = on_base_players(@plate_appearance.inning, @plate_appearance.top_inning, @plate_appearance.player_id)
+  end
+
+
   private
 
   def set_game
     @game = Game.find(params[:game_id])
   end
 
+  def set_plate_appearance
+    @plate_appearance = PlateAppearance.find(params[:id])
+  end
+
   def plate_appearance_params
     params.expect(plate_appearance: [ :player_id, :inning, :top_inning, :result, :rbi, :outs_before ])
   end
 
-  def on_base_players(inning, top_inning)
+  def on_base_players(inning, top_inning, exclude_player_id = nil)
     top = ActiveRecord::Type::Boolean.new.cast(top_inning)
     scored_player_ids = Run.joins(:plate_appearance)
                            .where(plate_appearances: { game_id: @game.id, inning: inning, top_inning: top })
                            .pluck(:player_id)
-
+    excluded_ids = [ *scored_player_ids, exclude_player_id ].compact
     @game.plate_appearances
          .where(inning: inning)
          .where(result: ON_BASE_RESULTS)
-         .where.not(player_id: scored_player_ids)
+         .where.not(player_id: excluded_ids)
          .includes(:player)
          .map(&:player)
          .uniq

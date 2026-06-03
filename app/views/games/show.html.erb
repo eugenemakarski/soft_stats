@@ -1,6 +1,6 @@
 <%# app/views/games/show.html.erb %>
 <div class="flex flex-col flex-3 gap-3 p-5 items-center">
-  <h1 class="font-bold text-4xl"><%= @game.date %>
+  <h1 class="font-bold text-4xl"><%= @game.date.to_date %>
     vs
     <%= @game.opponent %></h1>
   <% if @game.not_started? %>

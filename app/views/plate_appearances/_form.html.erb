@@ -1,5 +1,5 @@
 <%# app/views/plate_appearances/_form.html.erb %>
-<%= form_with model: [@game, plate_appearance] do |form| %>
+<%= form_with model: plate_appearance.new_record? ? [@game, plate_appearance] : plate_appearance do |form| %>
   <% if form.object.errors.any? %>
     <p class="text-red-500"><%= form.object.errors.full_messages.first %></p>
   <% end %>

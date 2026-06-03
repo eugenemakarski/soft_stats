@@ -5,6 +5,7 @@ cur_inning = game.current_inning
 is_home = game.is_home %>
 
 <div class="flex flex-col gap-8 w-full max-w-8xl p-4">
+  <%= render "score", game: @game %>
   <div class="w-full max-w-2xl mx-auto">
     <%# ── Inning tabs ─────────────────────────────────────────── %>
     <ul
@@ -18,7 +19,7 @@ is_home = game.is_home %>
       role="tablist"
     >
       <% (1..9).each do |inn| %>
-        <% inn_outs = game.outs_for(inn, is_home)
+        <% inn_outs = game.outs(inn, is_home)
         is_active = inn == cur_inning %>
         <li class="me-2 flex-1" role="presentation">
           <button
@@ -62,7 +63,7 @@ is_home = game.is_home %>
             <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
           </div>
 
-          <div class="flex-1 min-w-0">
+          <div class="flex-3 min-w-0">
             <%= render "batting",
             next_player_id: next_player_id,
             inn: inn,
@@ -71,7 +72,7 @@ is_home = game.is_home %>
           </div>
 
         <% else %>
-          <div class="flex-1 min-w-0">
+          <div class="flex-3 min-w-0">
             <%= render "batting",
             next_player_id: next_player_id,
             inn: inn,

@@ -24,7 +24,7 @@ Rails.application.routes.draw do
           post :generate_lineup
         end
         resources :game_rosters, shallow: true, only: [ :index, :create ]
-        resources :plate_appearances, only: [ :new, :create ]
+        resources :plate_appearances, only: [ :new, :create, :edit, :update ]
         resources :inning_scores, only: [ :new, :create ]
       end
     end

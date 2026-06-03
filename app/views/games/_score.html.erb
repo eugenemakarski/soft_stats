@@ -1,0 +1,26 @@
+<% away_our_half = !@game.is_home %>
+<% home_our_half = @game.is_home %>
+
+<div class="grid grid-cols-11 self-center">
+  <%# Header row %>
+  <div class="scoreboard-cell font-bold">Team</div>
+  <% (1..9).each do |inn| %>
+    <div class="scoreboard-cell font-bold"><%= inn %></div>
+  <% end %>
+  <div class="scoreboard-cell font-bold">R</div>
+
+  <%# Away row %>
+  <div class="scoreboard-cell">AWAY</div>
+  <% (1..9).each do |inn| %>
+    <div class="scoreboard-cell"><%= @game.inning_score(inn, away_our_half).first&.runs %></div>
+  <% end %>
+  <div class="scoreboard-cell font-bold"><%= @game.inning_scores.where(our_half: away_our_half).sum(:runs) %></div>
+
+  <%# Home row %>
+  <div class="scoreboard-cell">HOME</div>
+  <% (1..9).each do |inn| %>
+    <div class="scoreboard-cell"><%= @game.inning_score(inn, home_our_half).first&.runs %></div>
+  <% end %>
+  <div class="scoreboard-cell font-bold"><%= @game.inning_scores.where(our_half: home_our_half).sum(:runs) %></div>
+
+</div>
