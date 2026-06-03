@@ -8,18 +8,18 @@ module GamesHelper
     result = pa.result
     rbi = pa.rbi.to_i
     label = case result
-    when "single"        then "1B"
-    when "double"        then "2B"
-    when "triple"        then "3B"
-    when "home_run"      then "HR"
-    when "walk"          then "BB"
-    when "strikeout"     then "K"
-    when "groundout"     then "GO"
-    when "flyout"        then "FO"
-    when "sac"           then "SF"
-    when "double_play"   then "DP"
+    when "single"          then "1B"
+    when "double"          then "2B"
+    when "triple"          then "3B"
+    when "home_run"        then "HR"
+    when "walk"            then "BB"
+    when "strikeout"       then "K"
+    when "groundout"       then "GO"
+    when "flyout"          then "FLY"
+    when "sac_fly"         then "SAC"
+    when "double_play"     then "DP"
     when "fielders_choice" then "FC"
-    when "error"         then "E"
+    when "error"           then "E"
     else "?"
     end
 
@@ -27,7 +27,7 @@ module GamesHelper
     when "single", "double", "triple"             then "bg-blue-800 text-white"
     when "home_run"                               then "bg-green-800 text-white"
     when "walk"                                   then "bg-pink-800 text-white"
-    when "sac"                                    then "bg-yellow-800 text-white"
+    when "sac_fly"                                then "bg-yellow-800 text-white"
     when "strikeout"                              then "bg-red-900 text-white"
     else                                               "bg-orange-800 text-white"
     end

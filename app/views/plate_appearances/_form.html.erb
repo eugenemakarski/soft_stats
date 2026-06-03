@@ -13,7 +13,11 @@
     <div class="form-field">
       <%= form.label :result, class: "form-label" %>
       <%= form.select :result,
-                  PlateAppearance.results.keys.map { |r| [r.humanize.titleize, r] },
+                  PlateAppearance
+                    .results
+                    .keys
+                    .excluding("hbp", "sac_bunt")
+                    .map { |r| [r.humanize.titleize, r] },
                   { include_blank: "Select result" },
                   class: "form-input" %>
     </div>
