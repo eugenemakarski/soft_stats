@@ -23,7 +23,7 @@ class SeasonsController < ApplicationController
 
   def stats
     game_ids = @games.pluck(:id)
-    @abs = PlateAppearance.where(game_id: game_ids)
+    @team_abs = PlateAppearance.where(game_id: game_ids)
   end
 
 

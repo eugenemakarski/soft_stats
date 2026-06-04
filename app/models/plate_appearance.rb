@@ -13,7 +13,7 @@ class PlateAppearance < ApplicationRecord
     strikeout: 6,
     groundout: 7,
     flyout: 8,
-    lineout: 9,
+    popup: 9,
     sac_fly: 10,
     sac_bunt: 11,
     double_play: 12,

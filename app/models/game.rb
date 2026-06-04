@@ -7,7 +7,7 @@ class Game < ApplicationRecord
 
   enum :status, { not_started: 0, in_progress: 1, completed: 2 }
 
-  OUT_RESULTS = %w[strikeout groundout flyout lineout sac_fly sac_bunt fielders_choice double_play].freeze
+  OUT_RESULTS = %w[strikeout groundout flyout popup sac_fly sac_bunt fielders_choice double_play].freeze
 
   def our_score
     inning_scores.where(our_half: true).sum(:runs)

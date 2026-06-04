@@ -51,10 +51,33 @@
           <th scope="col" class="px-6 py-3 bg-neutral-secondary-soft font-medium">
             Triples
           </th>
+          <th scope="col" class="px-6 py-3 font-medium">
+            Walks?
+          </th>
         </tr>
       </thead>
       <tbody>
         <% @players.each do |player| %>
+          <% abs = @team_abs.where(player_id: player) %>
+          <% at_bats = abs.where.not(result: %i[walk hbp sac_fly sac_bunt]).count %>
+          <% hits = abs.where(result: %i[single double triple homerun]).count %>
+          <% rbis = abs.sum(:rbi) %>
+          <% walks = abs.where(result: %i[walk hbp]).count %>
+          <% sacs = abs.where(result: %i[sac_fly]).count %>
+          <% homeruns = abs.where(result: %i[home_run]).count %>
+          <% singles = abs.where(result: %i[single]).count %>
+          <% doubles = abs.where(result: %i[double]).count %>
+          <% triples = abs.where(result: %i[triple]).count %>
+          <% obp_num = at_bats > 0 ? (hits + walks).to_f / (at_bats + walks + sacs) : 0.0 %>
+          <% slg_num =
+            (
+              if at_bats > 0
+                (singles + (2 * doubles) + (3 * triples) + (4 * homeruns)).to_f / at_bats
+              else
+                0.0
+              end
+            ) %>
+
           <tr class="border-b border-default">
             <th
               scope="row"
@@ -65,42 +88,49 @@
               <%= player.name %>
             </th>
             <td class="px-6 py-4 cursor-pointer">
-              ab
+              <%= abs.count %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%= at_bats %>
             </td>
             <td class="px-6 py-4 text-body cursor-pointer">
-              ab
+              <%= hits %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%# AVG %>
+              <%= at_bats > 0 ? sprintf("%.3f", hits.to_f / at_bats).sub(/\A0/, "") : ".000" %>
             </td>
             <td class="px-6 py-4 text-body cursor-pointer">
-              ab
+              <%= rbis %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%= Run.where(plate_appearance_id: abs).count %>
             </td>
             <td class="px-6 py-4 text-body cursor-pointer">
-              ab
+              <%= homeruns %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%= obp_num > 0 ? sprintf("%.3f", obp_num).sub(/\A0/, "") : ".000" %>
             </td>
             <td class="px-6 py-4 text-body cursor-pointer">
-              ab
+              <%= slg_num > 0 ? sprintf("%.3f", slg_num).sub(/\A0/, "") : ".000" %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%= if (obp_num + slg_num) > 0
+                sprintf("%.3f", obp_num + slg_num).sub(/\A0/, "")
+              else
+                ".000"
+              end %>
             </td>
             <td class="px-6 py-4 text-body cursor-pointer">
-              ab
+              <%= doubles %>
             </td>
             <td class="px-6 py-4 bg-neutral-secondary-soft text-body cursor-pointer">
-              ab
+              <%= triples %>
             </td>
-
+            <td class="px-6 py-4 text-body cursor-pointer">
+              <%= walks %>
+            </td>
           </tr>
         <% end %>
       </tbody>
