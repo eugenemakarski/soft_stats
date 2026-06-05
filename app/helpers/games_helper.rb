@@ -16,6 +16,7 @@ module GamesHelper
     when "strikeout"       then "K"
     when "groundout"       then "GO"
     when "flyout"          then "FLY"
+    when "popup"           then "POP"
     when "sac_fly"         then "SAC"
     when "double_play"     then "DP"
     when "fielders_choice" then "FC"
