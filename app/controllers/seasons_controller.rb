@@ -38,7 +38,7 @@ class SeasonsController < ApplicationController
     @players = Player.joins(:player_teams).where(player_teams: { season_id: @season.id })
   end
   def set_games
-    @games = Game.joins(:season).where.associated(:season)
+    @games = Game.joins(:season).where.associated(:season).reorder("date ASC")
   end
 
   def season_params

@@ -13,7 +13,9 @@
             transition-colors hover: cursor-pointer
           "
         >
-          <%= link_to game.date, game_path(game), class: "flex-1 py-2 cursor-pointer" %>
+          <%= link_to "#{game.date.to_date} vs #{game.opponent}",
+          game_path(game),
+          class: "flex-1 py-2 cursor-pointer" %>
         </li>
       </ul>
     <% end %>
