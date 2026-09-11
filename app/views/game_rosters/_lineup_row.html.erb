@@ -1,0 +1,21 @@
+<%# app/views/game_rosters/_lineup_row.html.erb %>
+<div class="flex items-center gap-2" data-lineup-target="row">
+  <span
+    class="w-6 text-center font-semibold text-body"
+    data-lineup-target="orderLabel"
+  ></span>
+  <select
+    name="lineup[player_ids][]"
+    class="form-input flex-1"
+    data-lineup-target="playerSelect"
+    data-selected="<%= selected_player_id %>"
+    data-action="change->lineup#refresh"
+  ></select>
+  <button
+    type="button"
+    data-action="click->lineup#remove"
+    class="text-red-400 hover:text-red-600 cursor-pointer text-lg leading-none"
+    aria-label="Remove player"
+    title="Remove"
+  >🗑</button>
+</div>
