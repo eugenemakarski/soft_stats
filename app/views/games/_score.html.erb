@@ -1,7 +1,7 @@
 <% away_our_half = !@game.is_home %>
 <% home_our_half = @game.is_home %>
 
-<div class="grid grid-cols-11 self-center">
+<div class="grid grid-cols-11 w-max mx-auto">
   <%# Header row %>
   <div class="scoreboard-cell font-bold">Team</div>
   <% (1..9).each do |inn| %>

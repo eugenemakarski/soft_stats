@@ -9,7 +9,7 @@
     <%= render "in_progress", game: @game, rosters: @rosters %>
   <% end %>
 
-  <%= link_to "Back",
+  <%= link_to "Game List",
   season_path(@game.season_id),
   class:
     "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
@@ -23,10 +23,9 @@
     method: :post,
     class:
       "border-2 border-green-400 px-4 py-2 rounded-4xl text-green-500 hover:bg-green-400 hover:text-white" %>
-    <%= button_to "START GAME",
+    <%= button_to "Start Game",
     start_game_path(@game),
     method: :patch,
-    class:
-      "border-2 border-blue-400 mt-4 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+    class: "btn-primary" %>
   <% end %>
 </div>

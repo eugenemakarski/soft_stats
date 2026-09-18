@@ -1,0 +1,37 @@
+<%# Pitching lines, derived from the roster pitcher flag + inning scores.
+    Expects: stats (PlayerPitchingStats) %>
+  <div class="stats-scroller" data-controller="sortable-table">
+    <table class="stats-table">
+      <thead class="border-b border-default">
+        <tr>
+          <%= stat_header("Player", sort_type: "text", sticky: true) %>
+          <%= stat_header("G", title: "Games pitched") %>
+          <%= stat_header("IP", title: "Innings pitched (completed half-innings)") %>
+          <%= stat_header("W-L", title: "Record as pitcher of record — sorts by wins") %>
+          <%= stat_header("R", title: "Runs allowed") %>
+          <%= stat_header(
+            "ERA",
+            title: "Runs allowed per #{PlayerPitchingStats::INNINGS_PER_GAME} innings",
+          ) %>
+        </tr>
+      </thead>
+      <tbody data-sortable-table-target="body">
+        <% stats.each do |line| %>
+          <tr>
+            <th
+              scope="row"
+              class="stats-sticky-col font-medium"
+              data-value="<%= line.player.name %>"
+            >
+              <%= line.player.name %>
+            </th>
+            <td data-value="<%= line.games %>"><%= line.games %></td>
+            <td data-value="<%= line.innings_pitched %>"><%= line.innings_pitched %></td>
+            <td data-value="<%= line.wins %>"><%= line.record %></td>
+            <td data-value="<%= line.runs_allowed %>"><%= line.runs_allowed %></td>
+            <td data-value="<%= line.era %>"><%= stat_era(line.era) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>

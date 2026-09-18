@@ -1,5 +1,9 @@
 <%# app/views/plate_appearances/_form.html.erb %>
-<%= form_with model: plate_appearance.new_record? ? [@game, plate_appearance] : plate_appearance do |form| %>
+<%= form_with model: plate_appearance.new_record? ? [@game, plate_appearance] : plate_appearance,
+data: {
+  controller: "pa-form",
+  turbo_frame: "_top",
+} do |form| %>
   <% if form.object.errors.any? %>
     <p class="text-red-500"><%= form.object.errors.full_messages.first %></p>
   <% end %>
@@ -12,30 +16,44 @@
   <div class="flex flex-col gap-4">
     <div class="form-field">
       <%= form.label :result, class: "form-label" %>
+      <%# The select is alphabetical; these are the results that come up most,
+          ordered by frequency so the common case stays one tap. %>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <% PlateAppearance::QUICK_RESULTS.each do |name| %>
+          <button
+            type="button"
+            class="quick-result"
+            data-action="pa-form#pick"
+            data-pa-form-result-param="<%= name %>"
+          ><%= PlateAppearance.result_label(name) %></button>
+        <% end %>
+      </div>
       <%= form.select :result,
-                  PlateAppearance
-                    .results
-                    .keys
-                    .excluding("hbp", "sac_bunt")
-                    .map { |r| [r.humanize.titleize, r] },
+                  PlateAppearance.result_options,
                   { include_blank: "Select result" },
-                  class: "form-input" %>
+                  class: "form-input",
+                  data: {
+                    pa_form_target: "resultSelect",
+                  } %>
     </div>
 
     <div class="form-field">
       <%= form.label :rbi, "RBI", class: "form-label" %>
       <%= form.number_field :rbi,
-                        id: "rbi_field",
                         min: 0,
                         max: 4,
                         value: plate_appearance.rbi || 0,
-                        class: "form-input" %>
+                        class: "form-input",
+                        data: {
+                          pa_form_target: "rbiField",
+                          action: "input->pa-form#toggleRunners",
+                        } %>
     </div>
 
     <% if on_base_players.any? %>
       <div
-        id="runners_section"
         class="<%= plate_appearance.rbi.to_i > 0 ? '' : 'hidden' %>"
+        data-pa-form-target="runnersSection"
       >
         <label class="form-label">
           Who scored?
@@ -54,14 +72,8 @@
           <% end %>
         </div>
       </div>
-
-      <script>
-        document.getElementById("rbi_field").addEventListener("input", function() {
-          document.getElementById("runners_section").classList.toggle("hidden", parseInt(this.value) <= 0);
-        });
-      </script>
     <% end %>
 
-    <button class="btn-primary self-center"><%= form.submit "Save" %></button>
+    <%= form.submit "Save", class: "btn-primary self-center" %>
   </div>
 <% end %>

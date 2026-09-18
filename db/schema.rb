@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_31_180458) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_12_120000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -75,11 +75,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_180458) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "date"
+    t.integer "game_type", default: 0, null: false
     t.boolean "is_home", null: false
     t.string "opponent"
     t.integer "season_id"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.index ["season_id", "game_type"], name: "index_games_on_season_id_and_game_type"
     t.index ["season_id"], name: "index_games_on_season_id"
   end
 
@@ -101,6 +103,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_180458) do
     t.integer "player_id", null: false
     t.integer "rbi"
     t.integer "result"
+    t.boolean "runner_out", default: false, null: false
+    t.integer "runner_out_by_pa_id"
     t.boolean "top_inning", default: true
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_plate_appearances_on_game_id"
@@ -135,6 +139,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_31_180458) do
 
   create_table "runs", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "driven_in_by_pa_id"
     t.integer "plate_appearance_id", null: false
     t.integer "player_id", null: false
     t.datetime "updated_at", null: false

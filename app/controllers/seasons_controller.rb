@@ -1,10 +1,13 @@
 class SeasonsController < ApplicationController
   before_action :set_season, only: %i[show stats]
   before_action :set_team, only: %i[create new]
-  before_action :set_players, only: %i[show stats]
-  before_action :set_games, only: %i[show stats]
 
+  # The games list, newest first — the landing page for a team.
   def show
+    @seasons = @season.team.seasons.newest_first
+    @games = @season.games.newest_first.includes(:inning_scores).to_a
+    @record = @season.record(@games)
+    @playoff_record = Season.record(@games.select(&:game_type_playoff?))
   end
 
   def new
@@ -22,8 +25,13 @@ class SeasonsController < ApplicationController
   end
 
   def stats
-    game_ids = @games.pluck(:id)
-    @team_abs = PlateAppearance.where(game_id: game_ids)
+    @game_type = requested_game_type
+    @games = @season.games.of_type(@game_type).chronological
+    @players = @season.players.distinct.order(:name)
+
+    plate_appearances = PlateAppearance.where(game_id: @games.select(:id))
+    @batting_stats = PlayerSeasonStats.for(players: @players, plate_appearances: plate_appearances)
+    @pitching_stats = PlayerPitchingStats.for(games: @games)
   end
 
 
@@ -34,11 +42,10 @@ class SeasonsController < ApplicationController
   def set_team
     @team = Team.find(params[:team_id])
   end
-  def set_players
-    @players = Player.joins(:player_teams).where(player_teams: { season_id: @season.id })
-  end
-  def set_games
-    @games = Game.joins(:season).where.associated(:season).reorder("date ASC")
+
+  def requested_game_type
+    type = params[:game_type].presence
+    type if type && Game.game_types.key?(type)
   end
 
   def season_params

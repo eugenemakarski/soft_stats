@@ -1,0 +1,57 @@
+<%# Batting lines for a season / game-type filter. Expects: stats (PlayerSeasonStats) %>
+<div class="stats-scroller" data-controller="sortable-table">
+  <table class="stats-table">
+    <thead class="border-b border-default">
+      <tr>
+        <%= stat_header("Player", sort_type: "text", sticky: true) %>
+        <%= stat_header("PA", title: "Plate appearances") %>
+        <%= stat_header("AB", title: "At bats") %>
+        <%= stat_header("H", title: "Hits") %>
+        <%= stat_header("AVG", title: "Batting average") %>
+        <%= stat_header("OBP", title: "On-base percentage") %>
+        <%= stat_header("SLG", title: "Slugging") %>
+        <%= stat_header("OPS", title: "On-base plus slugging") %>
+        <%= stat_header("R", title: "Runs scored") %>
+        <%= stat_header("RBI", title: "Runs batted in") %>
+        <%= stat_header("2B", title: "Doubles") %>
+        <%= stat_header("3B", title: "Triples") %>
+        <%= stat_header("HR", title: "Home runs") %>
+        <%= stat_header("BB", title: "Walks") %>
+        <%= stat_header("HBP", title: "Hit by pitch") %>
+        <%= stat_header("K", title: "Strikeouts") %>
+      </tr>
+    </thead>
+    <tbody data-sortable-table-target="body">
+      <% stats.each do |line| %>
+        <tr>
+          <th
+            scope="row"
+            class="stats-sticky-col font-medium"
+            data-value="<%= line.player.name %>"
+          >
+            <%= line.player.name %>
+            <% if line.any_appearances? %>
+              <%= "\u{1F4A9}" if line.average < 0.3 || line.ops < 1 %>
+              <%= "\u{1F525}" if line.average > 0.55 || line.ops > 2 %>
+            <% end %>
+          </th>
+          <td data-value="<%= line.plate_appearances %>"><%= line.plate_appearances %></td>
+          <td data-value="<%= line.at_bats %>"><%= line.at_bats %></td>
+          <td data-value="<%= line.hits %>"><%= line.hits %></td>
+          <td data-value="<%= line.average %>"><%= stat_rate(line.average) %></td>
+          <td data-value="<%= line.on_base_percentage %>"><%= stat_rate(line.on_base_percentage) %></td>
+          <td data-value="<%= line.slugging %>"><%= stat_rate(line.slugging) %></td>
+          <td data-value="<%= line.ops %>"><%= stat_rate(line.ops) %></td>
+          <td data-value="<%= line.runs %>"><%= line.runs %></td>
+          <td data-value="<%= line.rbi %>"><%= line.rbi %></td>
+          <td data-value="<%= line.doubles %>"><%= line.doubles %></td>
+          <td data-value="<%= line.triples %>"><%= line.triples %></td>
+          <td data-value="<%= line.home_runs %>"><%= line.home_runs %></td>
+          <td data-value="<%= line.walks %>"><%= line.walks %></td>
+          <td data-value="<%= line.hit_by_pitch %>"><%= line.hit_by_pitch %></td>
+          <td data-value="<%= line.strikeouts %>"><%= line.strikeouts %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

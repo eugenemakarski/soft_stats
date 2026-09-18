@@ -105,3 +105,101 @@ h6 { @apply font-heading font-bold uppercase tracking-wide text-sm; }
   @apply h-8 w-16 flex items-center justify-center border-1 border-blue-400 text-center;
 }
 
+
+/* ── Stats tables ───────────────────────────────────────────── */
+
+/* Constrains the table to the viewport so it scrolls inside the card instead of
+   widening the whole document. Needs w-full: an items-center flex parent would
+   otherwise let it shrink-wrap to the table's full width. */
+.stats-scroller {
+  @apply relative w-full max-w-full overflow-x-auto bg-neutral-primary shadow-xs rounded-xl border border-default;
+}
+
+/* min-w-max keeps every column at its natural width so the scroller does the work
+   rather than the columns squashing together. */
+.stats-table {
+  @apply min-w-max w-full text-sm text-left text-heading;
+}
+
+.stats-table th,
+.stats-table td {
+  @apply px-3 py-2 whitespace-nowrap md:px-5 md:py-3;
+}
+
+.stats-table thead th {
+  @apply text-xs uppercase font-medium cursor-pointer select-none bg-gray-800 hover:bg-gray-700;
+}
+
+.stats-table tbody tr {
+  @apply border-b border-default hover:bg-gray-800/60;
+}
+
+.stats-table td {
+  @apply text-body;
+}
+
+/* Pins the player-name column so you can still tell whose row you're reading
+   after scrolling sideways on a phone. Backgrounds must be fully opaque or the
+   scrolled-under cells show through. */
+.stats-sticky-col {
+  @apply sticky left-0 z-10 bg-gray-900;
+}
+
+.stats-table thead .stats-sticky-col {
+  @apply z-20 bg-gray-800;
+}
+
+/* The row hover can't paint through an opaque sticky cell, so match it here. */
+.stats-table tbody tr:hover .stats-sticky-col {
+  @apply bg-gray-800;
+}
+
+/* Sort direction indicator: dim until a column is active, flipped for ascending. */
+.stats-table thead th .sort-icon {
+  @apply w-3 h-3 shrink-0 opacity-25 transition-transform;
+}
+
+.stats-table thead th.asc .sort-icon,
+.stats-table thead th.desc .sort-icon {
+  @apply opacity-100 text-fg-brand;
+}
+
+.stats-table thead th.asc .sort-icon {
+  @apply rotate-180;
+}
+
+/* Filter / season switcher chips */
+.chip {
+  @apply px-3 py-1.5 text-xs font-medium rounded-full border border-default text-body hover:bg-neutral-secondary-medium transition-colors;
+}
+
+.chip-active {
+  @apply bg-brand text-white border-transparent hover:bg-brand-strong;
+}
+
+/* ── In-game scorebook ──────────────────────────────────────── */
+
+/* Inning tabs. The active state is applied by scorebook_controller.js rather
+   than server-side, so .tab-active has to win on specificity alone. */
+.tab-button {
+  @apply inline-block w-full p-4 border-b-2 border-transparent text-body cursor-pointer hover:text-fg-brand hover:border-brand;
+}
+
+.tab-button.tab-active {
+  @apply text-fg-brand border-brand font-semibold;
+}
+
+/* Batting / fielding segmented control */
+.segment-button {
+  @apply px-4 py-2.5 text-sm font-medium text-body cursor-pointer whitespace-nowrap hover:bg-neutral-secondary-medium;
+}
+
+.segment-button.tab-active {
+  @apply bg-brand text-white hover:bg-brand-strong;
+}
+
+/* Frequency-ordered shortcuts above the alphabetical result list. Sized for a
+   thumb on a phone. */
+.quick-result {
+  @apply min-h-11 px-3 py-2 text-sm font-medium rounded-lg border border-default text-heading cursor-pointer hover:bg-neutral-secondary-medium;
+}

@@ -1,7 +1,7 @@
 <% max_abs =
   game.plate_appearances.group_by(&:player_id).values.map(&:count).max || 0 %>
 <% all_abs = game.plate_appearances %>
-<% inning_outs = game.outs(game.current_inning, game.is_home) %>
+<% inning_outs = game.outs(inn, game.is_home) %>
 
 <div class="flex flex-col gap-2">
   <h2 class="text-center">
@@ -10,14 +10,10 @@
       <%= inn %>
     <% else %>
       TOP
+      <%= inn %>
     <% end %>
   </h2>
-  <div
-    id="inning-<%= inn %>"
-    class=""
-    role="tabpanel"
-    aria-labelledby="inning-tab-<%= inn %>"
-  >
+  <div>
     <div class="relative overflow-x-auto rounded-base border border-default mt-4">
       <table class="data-table">
         <thead>
@@ -31,10 +27,11 @@
           </tr>
         </thead>
         <tbody>
-          <%# locked if inning_score exists for this inning with our_half %>
+          <%# Read-only once this half-inning's score has been submitted.
+              Three outs no longer locks it, so a mis-entered at-bat can still
+              be fixed before you move on. %>
           <% inning_locked =
-            game.inning_scores.any? { |s| s.inning == inn && s.our_half? } ||
-              inning_outs >= 3 %>
+            game.inning_scores.any? { |s| s.inning == inn && s.our_half? } %>
           <% @rosters.each do |roster| %>
             <% player_abs = all_abs.select { |pa| pa.player_id == roster.player_id } %>
             <% is_next =
@@ -62,12 +59,19 @@
                     top_inning: !@game.is_home,
                     player_id: roster.player_id,
                   ),
+                  data: {
+                    turbo_frame: "pa_form",
+                  },
                   class:
-                    "w-7 h-7 flex items-center justify-center rounded-full bg-brand hover:bg-brand-strong text-white font-bold text-base leading-none mx-auto" %>
+                    "min-w-11 min-h-11 flex items-center justify-center rounded-full bg-brand hover:bg-brand-strong text-white font-bold text-base leading-none mx-auto" %>
                 <% end %>
                 <% if !is_next && !inning_locked && active && game.players_with_ab_this_inning.include?(roster.player_id) %>
                   <% player_abs = all_abs.select { |pa| pa.player_id == roster.player_id } %>
-                  <%= link_to edit_plate_appearance_path(player_abs.last) do %>
+                  <%= link_to edit_plate_appearance_path(player_abs.last),
+                  class: "min-w-11 min-h-11 flex items-center justify-center mx-auto",
+                  data: {
+                    turbo_frame: "pa_form",
+                  } do %>
                     <svg
                       class="w-6 h-6 text-gray-800 dark:text-white"
                       aria-hidden="true"

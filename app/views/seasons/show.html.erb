@@ -1,50 +1,72 @@
-<div class="flex flex-col gap-3 p-5 items-center">
-  <h1 class="font-bold text-4xl">Games</h1>
+<div class="flex flex-col gap-4 p-4 md:p-5 w-full max-w-md mx-auto">
+  <header class="flex flex-col gap-1">
+    <h1 class="font-bold text-4xl"><%= @season.team.name %></h1>
+    <p class="text-heading text-lg">
+      <%= @season.season %>
+      ·
+      <%= record_text(@record) %>
+    </p>
+    <%# Playoffs are kept out of the season record, so show them separately. %>
+    <% if @playoff_record.values.sum.positive? %>
+      <p class="text-body-subtle text-sm">Playoffs
+        <%= record_text(@playoff_record) %></p>
+    <% end %>
+  </header>
+
+  <% if @seasons.size > 1 %>
+    <div class="flex flex-wrap gap-2 items-center">
+      <% @seasons.each do |season| %>
+        <%= link_to season.season,
+        season_path(season),
+        class: chip_class(season.id == @season.id) %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <nav class="flex flex-wrap gap-2">
+    <%= link_to "Stats", stats_season_path(@season), class: "btn-outline" %>
+    <%= link_to "Roster", season_player_teams_path(@season), class: "btn-outline" %>
+  </nav>
+
   <div
     class="
-      w-96 bg-neutral-primary-soft border border-default rounded-xl shadow-xs p-4
+      w-full bg-neutral-primary-soft border border-default rounded-xl shadow-xs p-2
     "
   >
-    <% @games.each do |game| %>
-      <ul role="list" class="space-y-3 divide-y divide-teal-100">
-        <li
-          class="
-            flex items-center justify-between hover:bg-cyan-800 rounded px-4 py-2
-            transition-colors hover: cursor-pointer
-          "
-        >
-          <%= link_to "#{game.date.to_date} vs #{game.opponent}",
-          game_path(game),
-          class: "flex-1 py-2 cursor-pointer" %>
-        </li>
+    <% if @games.empty? %>
+      <p class="text-body p-3">No games yet this season.</p>
+    <% else %>
+      <ul role="list" class="divide-y divide-default">
+        <% @games.each do |game| %>
+          <li class="hover:bg-cyan-800 rounded transition-colors">
+            <%= link_to game_path(game),
+            class: "flex items-center justify-between gap-3 px-3 py-3" do %>
+              <span class="min-w-0">
+                <span class="block truncate">
+                  <%= game.is_home ? "vs" : "@" %>
+                  <%= game.opponent %>
+                </span>
+                <span class="block text-xs text-body-subtle"><%= game.date.to_date %></span>
+              </span>
+              <span class="flex items-center gap-2 shrink-0">
+                <%# Regular season is the default, so only badge the exceptions. %>
+                <% unless game.game_type_regular? %>
+                  <span class="chip chip-active"><%= game.game_type_label %></span>
+                <% end %>
+                <%= game_score_label(game) %>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
       </ul>
     <% end %>
-    <div class="flex justify-center mt-3">
-      <%= link_to "New Game",
-      new_season_game_path(@season),
-      class:
-        "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-    </div>
-
   </div>
 
-  <div class="flex justify-center mt-3">
-    <%= link_to "Back",
-    team_path(@season.team_id),
-    class:
-      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+  <div class="flex justify-center gap-2">
+    <%= link_to "New Game", new_season_game_path(@season), class: "btn-primary" %>
   </div>
-  <div class="flex justify-center mt-3">
-    <%= link_to "Roster",
-    season_player_teams_path(@season),
-    class:
-      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+  <div class="flex justify-center gap-2">
+    <%= link_to "New Season", new_team_season_path(@season.team), class: "btn-outline" %>
+    <%= link_to "All Teams", teams_path(all: 1), class: "btn-outline" %>
   </div>
-  <div class="flex justify-center mt-3">
-    <%= link_to "Stats",
-    stats_season_path(@season),
-    class:
-      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-  </div>
-
 </div>
