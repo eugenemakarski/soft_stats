@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Inter:wght@400;500&display=swap");
 @import "tailwindcss";
 @import "flowbite/src/themes/default";
 @source "../../../node_modules/flowbite";
@@ -6,15 +6,27 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .font-heading {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: "Barlow Condensed", sans-serif;
 }
 
-h1 { @apply font-heading font-bold uppercase tracking-wide text-3xl; }
-h2 { @apply font-heading font-bold uppercase tracking-wide text-2xl; }
-h3 { @apply font-heading font-bold uppercase tracking-wide text-xl; }
-h4 { @apply font-heading font-bold uppercase tracking-wide text-lg; }
-h5 { @apply font-heading font-bold uppercase tracking-wide text-base; }
-h6 { @apply font-heading font-bold uppercase tracking-wide text-sm; }
+h1 {
+  @apply font-heading font-bold uppercase tracking-wide text-3xl;
+}
+h2 {
+  @apply font-heading font-bold uppercase tracking-wide text-2xl;
+}
+h3 {
+  @apply font-heading font-bold uppercase tracking-wide text-xl;
+}
+h4 {
+  @apply font-heading font-bold uppercase tracking-wide text-lg;
+}
+h5 {
+  @apply font-heading font-bold uppercase tracking-wide text-base;
+}
+h6 {
+  @apply font-heading font-bold uppercase tracking-wide text-sm;
+}
 
 @theme {
   /* main text color */
@@ -29,11 +41,11 @@ h6 { @apply font-heading font-bold uppercase tracking-wide text-sm; }
   --color-fg-brand: var(--color-blue-950);
   --color-fg-brand-strong: var(--color-blue-900);
 
-  --font-sans: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
-  --font-body: 'Inter', 'ui-sans-serif', 'system-ui', sans-serif;
-  --font-display: 'Barlow Condensed', 'ui-sans-serif', sans-serif;
-  --font-heading: 'Barlow Condensed', 'ui-sans-serif', sans-serif;
-  --font-mono: 'ui-monospace', 'SFMono-Regular', 'Menlo', monospace;
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-body: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-display: "Barlow Condensed", "ui-sans-serif", sans-serif;
+  --font-heading: "Barlow Condensed", "ui-sans-serif", sans-serif;
+  --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", monospace;
 
   --radius-base: 0.5rem;
 }
@@ -62,7 +74,14 @@ h6 { @apply font-heading font-bold uppercase tracking-wide text-sm; }
 
 .form-input {
   @apply bg-neutral-secondary-medium border border-default-medium text-heading text-sm
-         rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body;
+         rounded-lg focus:ring-brand focus:border-brand block w-full pl-3 pr-5 py-2.5 shadow-xs placeholder:text-body;
+}
+
+select.form-input {
+  @apply appearance-none pr-10 bg-no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-size: 1.25em 1.25em;
 }
 
 .form-label {
@@ -104,7 +123,6 @@ h6 { @apply font-heading font-bold uppercase tracking-wide text-sm; }
 .scoreboard-cell {
   @apply h-8 w-16 flex items-center justify-center border-1 border-blue-400 text-center;
 }
-
 
 /* ── Stats tables ───────────────────────────────────────────── */
 

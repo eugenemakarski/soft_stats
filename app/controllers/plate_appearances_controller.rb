@@ -1,6 +1,7 @@
 class PlateAppearancesController < ApplicationController
 before_action :set_game, only: [ :new, :create ]
 before_action :set_plate_appearance, only: [ :edit, :update ]
+before_action :require_game_edit!
 
 
   ON_BASE_RESULTS = %w[single double triple walk hbp fielders_choice error].freeze
@@ -75,11 +76,19 @@ before_action :set_plate_appearance, only: [ :edit, :update ]
   private
 
   def set_game
-    @game = Game.find(params[:game_id])
+    @game = Game.visible_to(current_user).find(params[:game_id])
+    switch_to_team(@game.season.team)
   end
 
+  # Shallow route: /plate_appearances/:id
   def set_plate_appearance
-    @plate_appearance = PlateAppearance.find(params[:id])
+    @plate_appearance = PlateAppearance.visible_to(current_user).find(params[:id])
+    @game = @plate_appearance.game
+    switch_to_team(@game.season.team)
+  end
+
+  def require_game_edit!
+    require_edit!(@game.season.team)
   end
 
   def plate_appearance_params
@@ -101,6 +110,9 @@ before_action :set_plate_appearance, only: [ :edit, :update ]
          .uniq
   end
 
+  # Scoped to @game's own plate appearances, so a foreign player_id in
+  # run_scorer_ids matches nothing and is skipped — and Run's validation is the
+  # backstop if that ever changes.
   def mark_runners_scored(player_ids)
     player_ids.each do |player_id|
       pa = @game.plate_appearances

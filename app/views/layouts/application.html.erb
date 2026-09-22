@@ -24,23 +24,71 @@
   </head>
 
   <body class="bg-gray-900 text-white">
-    <nav class="bg-gray-950 fixed w-full z-20 top-0 start-0 border-b border-default">
-      <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-        <%= link_to "SoftStats", root_path, class: "text-2xl font-semibold text-heading font-heading whitespace-nowrap" %>
+    <nav
+      class="
+        bg-gray-950 fixed w-full z-20 top-0 start-0 border-b border-default
+      "
+    >
+      <div
+        class="
+          max-w-screen-xl flex items-center justify-between text-start mx-auto p-4
+        "
+      >
+        <%= link_to "SoftStats",
+        root_path,
+        class: "text-2xl font-semibold text-heading font-heading whitespace-nowrap" %>
         <% if authenticated? %>
-          <%= button_to "Log out", session_path, method: :delete, class: "text-heading text-xl font-heading hover:text-fg-brand cursor-pointer" %>
+          <div class="flex items-center">
+            <%# Switching teams is just navigating to one, so this is links, not a form. %>
+            <% if current_teams.many? %>
+              <select
+                class="form-input py-1 w-auto"
+                onchange="if (this.value) Turbo.visit(this.value)"
+                aria-label="Switch team"
+              >
+                <% current_teams.each do |team| %>
+                  <option
+                    value="<%= team_path(team) %>"
+                    <%= "selected" if team.id == current_team&.id %>
+                  >
+                    <%= team.name %>
+                  </option>
+                <% end %>
+              </select>
+            <% elsif current_team %>
+              <span class="text-body text-lg truncate max-w-40"><%= current_team.name %></span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <% if authenticated? %>
+          <%= button_to "Log out",
+          session_path,
+          method: :delete,
+          class:
+            "whitespace-nowrap text-heading text-xl font-heading hover:text-fg-brand cursor-pointer" %>
         <% end %>
       </div>
     </nav>
 
     <main class="pt-20">
       <% if notice %>
-        <div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-5 py-2 rounded-lg shadow-lg">
+        <div
+          class="
+            fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-5 py-2
+            rounded-lg shadow-lg
+          "
+        >
           <%= notice %>
         </div>
       <% end %>
       <% if alert %>
-        <div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-5 py-2 rounded-lg shadow-lg">
+        <div
+          class="
+            fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-5 py-2
+            rounded-lg shadow-lg
+          "
+        >
           <%= alert %>
         </div>
       <% end %>

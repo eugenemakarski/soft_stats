@@ -1,12 +1,11 @@
 <%# app/views/players/new.html.erb %>
-<div class='flex flex-col justify-center justify-self-center w-full max-w-xl'>
+<div class='flex flex-col justify-center justify-self-center w-full max-w-xl p-4'>
   <h1 class="text-3xl pb-3">New Player</h1>
+  <p class="text-body pb-3"><%= @team.name %></p>
 
-  <div class="flex flex-col py-3">
+  <div class="flex flex-col py-3 gap-3">
     <%= render "form", player: @player %>
 
-    <button class="px-4 py-2 my-2 self-center border-2 rounded-4xl">
-      <%= link_to "Cancel", teams_path %>
-    </button>
+    <%= link_to "Cancel", team_players_path(@team), class: "btn-outline self-center" %>
   </div>
 </div>

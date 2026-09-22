@@ -70,3 +70,4 @@ end
 gem "tailwindcss-rails", "~> 4.4"
 
 gem "tailwindcss-ruby", "~> 4.3"
+gem "foreman"

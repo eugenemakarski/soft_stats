@@ -1,6 +1,7 @@
 class GameRostersController < ApplicationController
   before_action :set_game
   before_action :set_player_options
+  before_action :require_game_edit!
 
   def index
     @existing_rosters = @game.game_rosters.includes(:player).where(available: true)
@@ -38,13 +39,17 @@ class GameRostersController < ApplicationController
 
   private
   def set_game
-    @game = Game.find(params[:game_id])
+    @game = Game.visible_to(current_user).find(params[:game_id])
+    switch_to_team(@game.season.team)
   end
 
+  # Derived from the proven game, so foreign player ids in params are simply
+  # not in this list and get ignored by create.
   def set_player_options
-    @player_options = Player.joins(:player_teams)
-                             .where(player_teams: { season_id: @game.season_id })
-                             .distinct
-                             .order(:name)
+    @player_options = @game.season.players.distinct.order(:name)
+  end
+
+  def require_game_edit!
+    require_edit!(@game.season.team)
   end
 end

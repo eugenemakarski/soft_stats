@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_12_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_21_173603) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -134,7 +134,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_120000) do
     t.datetime "created_at", null: false
     t.integer "jersey_number"
     t.string "name"
+    t.integer "team_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_players_on_team_id"
   end
 
   create_table "runs", force: :cascade do |t|
@@ -164,6 +166,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_120000) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "team_memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "role", default: 0, null: false
+    t.integer "team_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["team_id", "user_id"], name: "index_team_memberships_on_team_id_and_user_id", unique: true
+    t.index ["team_id"], name: "index_team_memberships_on_team_id"
+    t.index ["user_id"], name: "index_team_memberships_on_user_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -191,8 +204,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_120000) do
   add_foreign_key "player_teams", "players"
   add_foreign_key "player_teams", "seasons"
   add_foreign_key "player_teams", "teams"
+  add_foreign_key "players", "teams"
   add_foreign_key "runs", "plate_appearances"
   add_foreign_key "runs", "players"
   add_foreign_key "seasons", "teams"
   add_foreign_key "sessions", "users"
+  add_foreign_key "team_memberships", "teams"
+  add_foreign_key "team_memberships", "users"
 end

@@ -6,6 +6,9 @@ class Season < ApplicationRecord
   has_many :players, through: :player_teams
 
   scope :newest_first, -> { order(season: :desc, id: :desc) }
+  scope :visible_to, ->(user) {
+    joins(team: :team_memberships).where(team_memberships: { user_id: user.id })
+  }
 
   def to_s = season.to_s
 

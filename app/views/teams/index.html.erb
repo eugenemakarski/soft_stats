@@ -1,32 +1,35 @@
-<div class="flex flex-col gap-3 p-5 items-center">
+<div class="flex flex-col gap-3 p-4 md:p-5 items-center">
   <div
     class="
-      w-96 bg-neutral-primary-soft border border-default rounded-xl shadow-xs p-4
+      w-full max-w-md bg-neutral-primary-soft border border-default rounded-xl
+      shadow-xs p-4
     "
   >
     <h1 class="flex font-bold justify-center text-4xl pb-2">Teams</h1>
-    <ul role="list" class="divide-y divide-teal-100">
-      <% @teams.each do |team| %>
-        <li
-          class="
-            flex items-center justify-between hover:bg-cyan-800 px-4 py-2 transition-colors
-            hover: cursor-pointer
-          "
-        >
-          <%= link_to team.name, team_path(team), class: "flex-1 py-2 cursor-pointer" %>
-        </li>
-      <% end %>
-    </ul>
-
+    <% if @teams.empty? %>
+      <p class="text-body text-center py-3">
+        You don't have access to any teams yet.
+      </p>
+    <% else %>
+      <ul role="list" class="divide-y divide-default">
+        <% @teams.each do |team| %>
+          <li class="hover:bg-cyan-800 rounded transition-colors">
+            <%= link_to team_path(team),
+            class: "flex items-center justify-between gap-2 px-4 py-3" do %>
+              <span class="truncate"><%= team.name %></span>
+              <%# Your role on this team, when it's not the default owner view. %>
+              <% membership = current_user.membership_for(team) %>
+              <% unless membership&.role_owner? %>
+                <span class="chip shrink-0"><%= membership&.role&.titleize %></span>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
-  <div class="flex flex-col gap-4 justify-center text-center mt-3">
-    <%= link_to "New Team",
-    new_team_path,
-    class:
-      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-    <%= link_to "Manage Players",
-    players_path,
-    class:
-      "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
+
+  <div class="flex justify-center mt-3">
+    <%= link_to "New Team", new_team_path, class: "btn-primary" %>
   </div>
 </div>

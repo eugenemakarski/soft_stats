@@ -9,16 +9,17 @@ Rails.application.routes.draw do
 
   root "teams#index"
 
-  resources :players
   resources :teams do
+    # Players belong to a team, so they're always reached through one.
+    resources :players, shallow: true
+    # as: :members so the helpers are team_members_path / team_member_path
+    resources :team_memberships, path: "members", as: :members, only: [ :index, :create, :update, :destroy ]
     resources :seasons, shallow: true, only: [ :new, :create, :show ] do
       member do
         get :stats
       end
-      resources :player_teams, shallow: true do
-        resources :player_positions, only: [ :create, :destroy ]
-      end
-      resources :games, shallow: true, only: [ :new, :create, :edit, :show ] do
+      resources :player_teams, shallow: true
+      resources :games, shallow: true, only: [ :new, :create, :show ] do
         member do
           patch :start
           post :generate_lineup

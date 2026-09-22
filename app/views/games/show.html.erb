@@ -13,7 +13,7 @@
   season_path(@game.season_id),
   class:
     "border-2 border-blue-400 px-4 py-2 rounded-4xl text-blue-500 hover:bg-blue-400 hover:text-white" %>
-  <% if @game.not_started? %>
+  <% if @game.not_started? && current_user.can_edit?(@game.season.team) %>
     <%= link_to "Update Game Roster",
     game_game_rosters_path(@game),
     class:

@@ -1,6 +1,10 @@
 <%# app/views/players/edit.html.erb %>
-<h1>Edit Player</h1>
+<div class='flex flex-col justify-center justify-self-center w-full max-w-xl p-4'>
+  <h1 class="text-3xl pb-3">Edit Player</h1>
 
-<%= render "form", player: @player %>
-<%= link_to "Cancel", @player %>
+  <div class="flex flex-col py-3 gap-3">
+    <%= render "form", player: @player %>
 
+    <%= link_to "Cancel", player_path(@player), class: "btn-outline self-center" %>
+  </div>
+</div>

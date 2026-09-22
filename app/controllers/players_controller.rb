@@ -1,18 +1,21 @@
 class PlayersController < ApplicationController
+  before_action :set_team, only: %i[index new create]
   before_action :set_player, only: %i[show update edit destroy]
+  before_action :require_team_edit!, only: %i[new create]
 
   def index
-    @players = Player.all
+    @players = @team.players.order(:name)
   end
 
   def new
-    @player = Player.new
+    @player = @team.players.new
   end
 
   def create
-    @player = Player.new(player_params)
+    # team_id is never mass-assignable — it comes from the URL, not the form.
+    @player = @team.players.new(player_params)
     if @player.save
-      redirect_to players_path
+      redirect_to team_players_path(@team)
     else
       render :new, status: :unprocessable_entity
     end
@@ -23,20 +26,36 @@ class PlayersController < ApplicationController
 
   def update
     if @player.update(player_params)
-      redirect_to players_path
+      redirect_to team_players_path(@player.team)
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @player.destroy
-    redirect_to players_path
+    team = @player.team
+    if @player.destroy
+      redirect_to team_players_path(team)
+    else
+      redirect_to team_players_path(team), alert: @player.errors.full_messages.to_sentence
+    end
   end
 
   private
+  def set_team
+    @team = Team.visible_to(current_user).find(params[:team_id])
+    switch_to_team(@team)
+  end
+
+  # Shallow route: /players/:id
   def set_player
-    @player = Player.find(params[:id])
+    @player = Player.visible_to(current_user).find(params[:id])
+    switch_to_team(@player.team)
+    require_edit!(@player.team) unless action_name == "show"
+  end
+
+  def require_team_edit!
+    require_edit!(@team)
   end
 
   def player_params

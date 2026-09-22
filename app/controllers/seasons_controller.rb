@@ -1,6 +1,7 @@
 class SeasonsController < ApplicationController
   before_action :set_season, only: %i[show stats]
   before_action :set_team, only: %i[create new]
+  before_action :require_team_edit!, only: %i[new create]
 
   # The games list, newest first — the landing page for a team.
   def show
@@ -36,11 +37,19 @@ class SeasonsController < ApplicationController
 
 
   private
+  # Shallow route: /seasons/:id — the scope is the only thing between a foreign
+  # id and this team's data.
   def set_season
-    @season = Season.find(params[:id])
+    @season = Season.visible_to(current_user).find(params[:id])
+    switch_to_team(@season.team)
   end
+
   def set_team
-    @team = Team.find(params[:team_id])
+    @team = Team.visible_to(current_user).find(params[:team_id])
+  end
+
+  def require_team_edit!
+    require_edit!(@team)
   end
 
   def requested_game_type

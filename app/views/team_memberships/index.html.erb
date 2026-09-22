@@ -1,0 +1,65 @@
+<div class="flex flex-col gap-4 p-4 md:p-5 w-full max-w-md mx-auto">
+  <header class="flex flex-col gap-1">
+    <h1 class="font-bold text-4xl"><%= @team.name %></h1>
+    <p class="text-body">Who can see and edit this team</p>
+  </header>
+
+  <div class="card flex flex-col gap-3">
+    <% @memberships.each do |membership| %>
+      <div class="flex flex-col gap-2 py-2 border-b border-default last:border-0">
+        <span class="font-medium text-heading break-all"><%= membership.user.email_address %></span>
+        <div class="flex flex-wrap items-center gap-2">
+          <%= form_with model: membership,
+          url: team_member_path(@team, membership),
+          method: :patch,
+          class: "flex items-center gap-2" do |form| %>
+            <%= form.select :role,
+                        TeamMembership.roles.keys.map { |role| [role.titleize, role] },
+                        {},
+                        class: "form-input py-1.5",
+                        onchange: "this.form.requestSubmit()" %>
+            <noscript><%= form.submit "Save", class: "btn-outline" %></noscript>
+          <% end %>
+          <%= button_to "Remove",
+          team_member_path(@team, membership),
+          method: :delete,
+          class: "btn-outline",
+          data: {
+            turbo_confirm: "Remove #{membership.user.email_address} from #{@team.name}?",
+          } %>
+        </div>
+        <span class="text-xs text-body-subtle"><%= membership.role_label %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="card flex flex-col gap-3">
+    <h2>Add someone</h2>
+    <%= form_with model: @membership, url: team_members_path(@team), class: "flex flex-col gap-3" do |form| %>
+      <div class="form-field">
+        <%= form.label :email_address, "Email address", class: "form-label" %>
+        <%= form.email_field :email_address,
+                         class: "form-input",
+                         placeholder: "them@example.com" %>
+      </div>
+      <div class="form-field">
+        <%= form.label :role, class: "form-label" %>
+        <%= form.select :role,
+                    TeamMembership.roles.keys.map { |role|
+                      [TeamMembership.role_label(role), role]
+                    },
+                    { selected: "viewer" },
+                    class: "form-input" %>
+      </div>
+      <%= form.submit "Add to team", class: "btn-primary self-start" %>
+    <% end %>
+    <p class="text-xs text-body-subtle">
+      They need a login already. Please ask your administrator to create one
+      for you.
+    </p>
+  </div>
+
+  <div class="flex justify-center">
+    <%= link_to "Back", team_path(@team), class: "btn-outline" %>
+  </div>
+</div>

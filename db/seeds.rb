@@ -1,23 +1,21 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# Runs on every container boot via bin/docker-entrypoint, so this must stay
+# idempotent and must not blow up when the env vars are absent.
 #
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-puts "Running seeds..."
-puts "Running seeds..."
-puts "Env: #{Rails.env}"
-puts "Table exists: #{ActiveRecord::Base.connection.table_exists?(:users)}"
-puts "Column exists: #{ActiveRecord::Base.connection.column_exists?(:users, :email)}"
-if Rails.env.production? &&
-   ActiveRecord::Base.connection.table_exists?(:users) &&
-   ActiveRecord::Base.connection.column_exists?(:users, :email)
-  puts "Creating seed user: "
-  User.find_or_create_by(email: ENV["SEED_USER_EMAIL"]) do |u|
-    u.password = ENV["SEED_USER_PASSWORD"]
-    u.password_confirmation = ENV["SEED_USER_PASSWORD"]
+# For ad-hoc logins and access, use the rake task instead:
+#   bin/rails users:create EMAIL=… PASSWORD=… TEAM='Team Name' ROLE=viewer
+#   bin/rails users:list
+if ENV["SEED_USER_EMAIL"].present? && ENV["SEED_USER_PASSWORD"].present?
+  user = User.find_or_initialize_by(email_address: ENV["SEED_USER_EMAIL"])
+
+  if user.new_record?
+    user.password = ENV["SEED_USER_PASSWORD"]
+    user.save!
+    Rails.logger.info "[seeds] created user #{user.email_address}"
+  end
+
+  if ENV["SEED_TEAM_NAME"].present?
+    team = Team.find_or_create_by!(name: ENV["SEED_TEAM_NAME"])
+    TeamMembership.find_or_create_by!(user: user, team: team) { |m| m.role = :owner }
+    Rails.logger.info "[seeds] #{user.email_address} owns #{team.name}"
   end
 end

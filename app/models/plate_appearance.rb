@@ -25,6 +25,17 @@ class PlateAppearance < ApplicationRecord
 
   validates :result, presence: true
 
+  scope :visible_to, ->(user) {
+    joins(game: { season: { team: :team_memberships } })
+      .where(team_memberships: { user_id: user.id })
+  }
+
+  delegate :team, to: :game
+
+  # player_id comes straight off the form, so this is what stops a crafted
+  # request recording an at-bat for another team's player.
+  validate :player_must_belong_to_games_team
+
   # Display labels. These exist because `humanize.titleize` produces "Hbp" and
   # "Fielders Choice", and the entry list sorts by the label the user actually
   # reads — so the labels have to be canonical before sorting means anything.
@@ -63,5 +74,14 @@ class PlateAppearance < ApplicationRecord
 
   def self.result_label(name)
     RESULT_LABELS.fetch(name.to_s, name.to_s.humanize)
+  end
+
+  private
+
+  def player_must_belong_to_games_team
+    team_id = game&.season&.team_id
+    return if player.nil? || team_id.nil?
+
+    errors.add(:player, "is not on this team") unless player.team_id == team_id
   end
 end

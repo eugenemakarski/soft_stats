@@ -2,7 +2,10 @@
 is_home = game.is_home
 active_half = game.active_half(cur_inning)
 active_half_name = active_half == :fielding ? "fielding" : "batting"
-next_player_id = game.next_batter_id %>
+next_player_id = game.next_batter_id
+# Viewers see the whole scorebook but none of the controls: `active` is what
+# gates the +, the edit chips, "Next Half Inning" and the opponent score form.
+can_edit = current_user.can_edit?(game.season.team) %>
 
 <div
   class="flex flex-col gap-4 w-full max-w-4xl mx-auto p-2 md:p-4"
@@ -102,7 +105,7 @@ next_player_id = game.next_batter_id %>
       next_player_id: next_player_id,
       inn: inn,
       game: @game,
-      active: half == :batting %>
+      active: can_edit && half == :batting %>
     </div>
     <div
       id="panel-<%= inn %>-fielding"
@@ -113,7 +116,7 @@ next_player_id = game.next_batter_id %>
       data-inning="<%= inn %>"
       data-half="fielding"
     >
-      <%= render "fielding", inn: inn, game: @game, active: half == :fielding %>
+      <%= render "fielding", inn: inn, game: @game, active: can_edit && half == :fielding %>
     </div>
   <% end %>
 

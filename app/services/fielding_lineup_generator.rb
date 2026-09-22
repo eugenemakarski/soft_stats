@@ -24,6 +24,9 @@ class FieldingLineupGenerator
                    .to_a
   end
 
+  # NOTE: insert_all skips validations, so this is the one write path with no
+  # model-level tenancy check. It's safe structurally — every player_id comes
+  # from this game's own rosters.
   def generate_and_save
     schedule = generate
 
@@ -34,7 +37,10 @@ class FieldingLineupGenerator
     end
 
     FieldingPosition.where(game_id: @game.id).delete_all
-    FieldingPosition.insert_all(records)
+    # insert_all raises on an empty array, and with no available non-pitcher
+    # players there is nothing to assign — the delete above has already cleared
+    # the old lineup, which is the correct end state.
+    FieldingPosition.insert_all(records) if records.any?
 
     schedule
   end

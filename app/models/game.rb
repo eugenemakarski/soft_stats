@@ -12,6 +12,11 @@ class Game < ApplicationRecord
 
   scope :chronological, -> { reorder(date: :asc, id: :asc) }
   scope :newest_first, -> { reorder(date: :desc, id: :desc) }
+  scope :visible_to, ->(user) {
+    joins(season: { team: :team_memberships }).where(team_memberships: { user_id: user.id })
+  }
+
+  delegate :team, to: :season
 
   # Narrows to one game_type when given a valid one; otherwise leaves the scope alone
   # so callers can pass an unfiltered "All" straight through.

@@ -17,7 +17,6 @@
         <%= stat_header("3B", title: "Triples") %>
         <%= stat_header("HR", title: "Home runs") %>
         <%= stat_header("BB", title: "Walks") %>
-        <%= stat_header("HBP", title: "Hit by pitch") %>
         <%= stat_header("K", title: "Strikeouts") %>
       </tr>
     </thead>
@@ -48,7 +47,6 @@
           <td data-value="<%= line.triples %>"><%= line.triples %></td>
           <td data-value="<%= line.home_runs %>"><%= line.home_runs %></td>
           <td data-value="<%= line.walks %>"><%= line.walks %></td>
-          <td data-value="<%= line.hit_by_pitch %>"><%= line.hit_by_pitch %></td>
           <td data-value="<%= line.strikeouts %>"><%= line.strikeouts %></td>
         </tr>
       <% end %>

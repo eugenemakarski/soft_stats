@@ -1,5 +1,6 @@
 class InningScoresController < ApplicationController
   before_action :set_game
+  before_action :require_game_edit!
   before_action :set_inning, only: %i[new create]
 
   def new
@@ -35,7 +36,12 @@ class InningScoresController < ApplicationController
   private
 
   def set_game
-    @game = Game.find(params[:game_id])
+    @game = Game.visible_to(current_user).find(params[:game_id])
+    switch_to_team(@game.season.team)
+  end
+
+  def require_game_edit!
+    require_edit!(@game.season.team)
   end
 
   def set_inning

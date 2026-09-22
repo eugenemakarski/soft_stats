@@ -23,9 +23,14 @@
     </div>
   <% end %>
 
+  <% can_edit = current_user.can_edit?(@season.team) %>
+
   <nav class="flex flex-wrap gap-2">
     <%= link_to "Stats", stats_season_path(@season), class: "btn-outline" %>
-    <%= link_to "Roster", season_player_teams_path(@season), class: "btn-outline" %>
+    <% if can_edit %>
+      <%= link_to "Roster", season_player_teams_path(@season), class: "btn-outline" %>
+      <%= link_to "Players", team_players_path(@season.team), class: "btn-outline" %>
+    <% end %>
   </nav>
 
   <div
@@ -62,11 +67,18 @@
     <% end %>
   </div>
 
-  <div class="flex justify-center gap-2">
-    <%= link_to "New Game", new_season_game_path(@season), class: "btn-primary" %>
-  </div>
-  <div class="flex justify-center gap-2">
-    <%= link_to "New Season", new_team_season_path(@season.team), class: "btn-outline" %>
+  <% if can_edit %>
+    <div class="flex justify-center gap-2">
+      <%= link_to "New Game", new_season_game_path(@season), class: "btn-primary" %>
+    </div>
+  <% end %>
+  <div class="flex flex-wrap justify-center gap-2">
+    <% if can_edit %>
+      <%= link_to "New Season", new_team_season_path(@season.team), class: "btn-outline" %>
+    <% end %>
+    <% if current_user.owns?(@season.team) %>
+      <%= link_to "Members", team_members_path(@season.team), class: "btn-outline" %>
+    <% end %>
     <%= link_to "All Teams", teams_path(all: 1), class: "btn-outline" %>
   </div>
 </div>

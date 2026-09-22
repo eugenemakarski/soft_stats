@@ -1,6 +1,9 @@
 class GamesController < ApplicationController
   before_action :set_season, only: %i[new create]
-  before_action :set_game, only: %i[show start end_half_inning generate_lineup]
+  before_action :set_game, only: %i[show start generate_lineup]
+  before_action :require_season_edit!, only: %i[new create]
+  before_action :require_game_edit!, only: %i[start generate_lineup]
+
   def new
     @game = Game.new
   end
@@ -18,8 +21,7 @@ class GamesController < ApplicationController
   def show
     @rosters = @game.game_rosters.includes(:player).where(available: true)
     @game.inning_scores.load
-    @fielding = FieldingPosition.where(game_id: @game.id, player_id: @rosters.map(&:player_id))
-                            .includes(:player)
+    @fielding = @game.fielding_positions.where(player_id: @rosters.map(&:player_id)).includes(:player)
   end
 
   def start
@@ -28,29 +30,32 @@ class GamesController < ApplicationController
   end
 
   def generate_lineup
-    FieldingLineupGenerator.new(@game).generate_and_save
-    redirect_to game_path(@game), notice: "Fielding lineup generated"
-  end
+    schedule = FieldingLineupGenerator.new(@game).generate_and_save
 
-  def end_half_inning
-    our_top = !@game.is_home
-    inning = @game.batting_inning
-    our_runs = Run.joins(:plate_appearance)
-                  .where(plate_appearances: { game_id: @game.id, inning: inning, top_inning: our_top })
-                  .count
-    @game.inning_scores.find_or_create_by!(inning: inning, top_inning: our_top) do |s|
-      s.runs = our_runs
+    if schedule.any? { |inning| inning[:assignments].any? }
+      redirect_to game_path(@game), notice: "Fielding lineup generated"
+    else
+      redirect_to game_path(@game), alert: "No available fielders — set the game roster first."
     end
-    redirect_to new_game_inning_score_path(@game, inning: inning)
   end
 
   private
   def set_season
-    @season = Season.find(params[:season_id])
+    @season = Season.visible_to(current_user).find(params[:season_id])
   end
 
+  # Shallow route: /games/:id — nothing above this id proves anything.
   def set_game
-    @game = Game.find(params[:id])
+    @game = Game.visible_to(current_user).find(params[:id])
+    switch_to_team(@game.season.team)
+  end
+
+  def require_season_edit!
+    require_edit!(@season.team)
+  end
+
+  def require_game_edit!
+    require_edit!(@game.season.team)
   end
 
   def game_params
